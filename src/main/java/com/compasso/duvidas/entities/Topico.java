@@ -1,6 +1,7 @@
 package com.compasso.duvidas.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.compasso.duvidas.constants.StatusTopico;
@@ -26,7 +28,8 @@ public class Topico {
 	
 	private String descricao;
 	
-	private List<Resposta> respostas;
+	@OneToMany(mappedBy = "topico")
+	private List<Resposta> respostas = new ArrayList<>();
 	
 	private LocalDateTime dataCriacao = LocalDateTime.now();
 	
