@@ -40,5 +40,9 @@ public class Topico {
 	private Curso curso;
 	
 	private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
+
+	public void close() {
+		this.status = StatusTopico.FECHADO;
+	}
 	
 }
