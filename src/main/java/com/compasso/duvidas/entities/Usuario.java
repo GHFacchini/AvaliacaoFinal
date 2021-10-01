@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import com.compasso.duvidas.constants.TipoUsuario;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 @Entity
@@ -17,6 +18,7 @@ public class Usuario {
 	private String nome;
 
 	@ManyToOne
+	@JsonBackReference
 	private Turma turma;
 	
 	private	String email;
@@ -24,5 +26,16 @@ public class Usuario {
 	private String senha;
 	@Enumerated(EnumType.STRING)
 	private TipoUsuario tipoUsuario;
-	
+
+
+	@Override
+	public String toString() {
+		return "Usuario{" +
+				"id=" + id +
+				", nome='" + nome + '\'' +
+				", turma=" + turma +
+				", email='" + email + '\'' +
+				", tipoUsuario=" + tipoUsuario +
+				'}';
+	}
 }
