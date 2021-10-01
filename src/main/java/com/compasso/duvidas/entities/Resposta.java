@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 
 @Entity
@@ -20,9 +22,11 @@ public class Resposta {
 	private Long id;
 	
 	@ManyToOne
+	@JsonBackReference
 	private Usuario autor;
 	
 	@ManyToOne
+	@JsonBackReference
 	private Topico topico;
 	
 	private LocalDateTime dataCriacao = LocalDateTime.now();

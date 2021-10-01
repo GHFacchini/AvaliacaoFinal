@@ -9,10 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.compasso.duvidas.dto.RespostaDTO;
 import com.compasso.duvidas.dto.TopicoDTO;
 import com.compasso.duvidas.dto.TopicoFormDTO;
-import com.compasso.duvidas.entities.Resposta;
 import com.compasso.duvidas.entities.Topico;
 import com.compasso.duvidas.repositories.TopicoRepository;
 
