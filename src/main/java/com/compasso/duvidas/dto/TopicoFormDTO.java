@@ -17,6 +17,8 @@ public class TopicoFormDTO {
 	private String descricao;
 	
 //	@NotNull(message = "curso is required")
-	private Curso curso;
+	private Long cursoId;
+
+	private Long autorId;
 
 }

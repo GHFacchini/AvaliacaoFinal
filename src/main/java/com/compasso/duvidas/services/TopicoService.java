@@ -9,10 +9,16 @@ import com.compasso.duvidas.dto.TopicoFormDTO;
 
 public interface TopicoService {
 
-	TopicoDTO save(TopicoFormDTO form);
+	ResponseEntity<TopicoDTO> save(TopicoFormDTO form);
 
-	Page<TopicoDTO> findAll(Pageable page, String curso);
+	Page<TopicoDTO> findAll(Pageable page, String titulo);
 
 	ResponseEntity<?> close(Long id);
-	
+
+	ResponseEntity<TopicoDTO> findById(Long id);
+
+	ResponseEntity<TopicoDTO> update(Long id, TopicoFormDTO form);
+
+
+	ResponseEntity<TopicoDTO> delete(Long id);
 }

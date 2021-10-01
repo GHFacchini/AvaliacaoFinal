@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,16 +30,27 @@ public class TopicoController {
 	
 	@PostMapping
 	public ResponseEntity<TopicoDTO> save(@RequestBody @Valid TopicoFormDTO form) {
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(topicoService.save(form));
+		return topicoService.save(form);
 	}
 	
 	@GetMapping
 	public ResponseEntity <Page<TopicoDTO>> findAll(@PageableDefault Pageable page,
-			@RequestParam(required = false)String curso) {
-		return ResponseEntity.ok(topicoService.findAll(page, curso));
+			@RequestParam(required = false)String titulo) {
+		return ResponseEntity.ok(topicoService.findAll(page, titulo));
 	}
-	
+
+	/*@GetMapping("/{id}")
+	public ResponseEntity<TopicoDTO> findById(@PathVariable Long id){ return topicoService.findById(id);}*/
+
+
+	@PutMapping("/{id}")
+	public ResponseEntity<TopicoDTO> update(@PathVariable Long id, @RequestBody TopicoFormDTO form){
+		return topicoService.update(id, form);
+	}
+
+	@DeleteMapping
+	public ResponseEntity<TopicoDTO> delete(@PathVariable Long id){ return topicoService.delete(id);}
+
 	@GetMapping("/fechar/{id}")
 	public ResponseEntity<?> findAll(@PathVariable Long id) {
 		return topicoService.close(id);

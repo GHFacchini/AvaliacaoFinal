@@ -1,5 +1,6 @@
 package com.compasso.duvidas.services;
 
+import com.compasso.duvidas.entities.Topico;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
