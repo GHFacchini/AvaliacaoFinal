@@ -29,6 +29,8 @@ public class Resposta {
 	@JsonBackReference
 	private Topico topico;
 	
+	private String mensagem;
+	
 	private LocalDateTime dataCriacao = LocalDateTime.now();
 	
 	private Boolean solucao = false;

@@ -11,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Data;
 
 @Entity
@@ -24,8 +26,12 @@ public class Turma {
 	private String nome;
 	
 	@OneToMany
+	@JsonManagedReference
 	private List<Usuario> usuarios = new ArrayList<>();
 	
 	@ManyToMany
 	private List<Usuario> moderadores = new ArrayList<>();
+
+
+	public void adicionarUsuario(Usuario usuario){this.getUsuarios().add(usuario);}
 }

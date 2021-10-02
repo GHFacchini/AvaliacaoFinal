@@ -24,8 +24,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioDTO> save(@RequestBody @Valid UsuarioFormDTO form) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(usuarioService.save(form));
+        return usuarioService.save(form);
     }
 
     @GetMapping
@@ -34,5 +33,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.findAll(page, nome));
 
     }
+
+    /* adicionar aluno à uma determinada turma
+    @GetMapping("/turmas/")
+    public ResponseEntity<UsuarioDTO> adicionarEmTurma(){
+    } */
+
+
 
 }

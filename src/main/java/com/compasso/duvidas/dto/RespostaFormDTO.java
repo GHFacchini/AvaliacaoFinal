@@ -7,6 +7,7 @@ public class RespostaFormDTO {
 	
 	private Long idAutor;
 	private Long idTopico;
+	private String mensagem;
 	private Boolean solucao;
 
 }

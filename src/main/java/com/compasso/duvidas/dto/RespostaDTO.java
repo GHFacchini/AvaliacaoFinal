@@ -17,6 +17,7 @@ public class RespostaDTO {
 	private Long id;
 	private Usuario autor;
 	private Topico topico;
+	private String mensagem;
 	private LocalDateTime dataCriacao;
 	private Boolean solucao;
 	
@@ -24,6 +25,7 @@ public class RespostaDTO {
 		this.id = resposta.getId();
 		this.autor = resposta.getAutor();
 		this.topico = resposta.getTopico();
+		this.mensagem = resposta.getMensagem();
 		this.dataCriacao = resposta.getDataCriacao();
 		this.solucao = resposta.getSolucao();
 	}

@@ -45,8 +45,13 @@ public class RespostaServiceImpl implements RespostaService{
 		entity.setAutor(autor.get());
 		entity.setTopico(topico.get());
 		entity.setSolucao(form.getSolucao());
+		entity.setMensagem(form.getMensagem());
+		
+		topico.get().setAutor(autor.get());
 		
 		respostaRepository.save(entity);
+		topicoRepository.save(topico.get());
+		
 		RespostaDTO respostaDTO = mapper.map(entity, RespostaDTO.class);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(respostaDTO);
@@ -73,21 +78,26 @@ public class RespostaServiceImpl implements RespostaService{
 		Optional<Resposta> resposta = respostaRepository.findById(id);
 		if (resposta.isPresent()) {
 			Resposta entity = resposta.get();
-			if (form.getIdAutor() != null) {
+			if (form.getIdAutor() != null && form.getIdTopico() != null) {
 				Optional<Usuario> autor = usuarioRepository.findById(form.getIdAutor());
-				if(autor.isPresent()) entity.setAutor(autor.get());
-				else return ((BodyBuilder) ResponseEntity.notFound()).body("Usuário autor não encontrado"); 
-			}
-				
-			if (form.getIdTopico() != null) {
 				Optional<Topico> topico = topicoRepository.findById(form.getIdTopico());
-				if(topico.isPresent()) entity.setTopico(topico.get());
-				else return ((BodyBuilder) ResponseEntity.notFound()).body("Tópico não encontrado"); 
+				if(autor.isPresent()) {
+					if(topico.isPresent()) {
+						entity.setTopico(topico.get());
+						entity.setAutor(autor.get());
+						
+						topico.get().setAutor(autor.get());
+						topicoRepository.save(topico.get());
+					} else return ((BodyBuilder) ResponseEntity.notFound()).body("Tópico não encontrado"); 
+				} else return ((BodyBuilder) ResponseEntity.notFound()).body("Usuário autor não encontrado"); 
 			}
-				
+			
+			if(form.getMensagem() != null)
+				entity.setMensagem(form.getMensagem());
+			
 			if(form.getSolucao() != null)
 				entity.setSolucao(form.getSolucao());
-
+			
 			respostaRepository.save(entity);
 			return ResponseEntity.ok().body(mapper.map(entity, RespostaDTO.class));
 		} else

@@ -1,18 +1,17 @@
 package com.compasso.duvidas.dto;
 
-import com.compasso.duvidas.constants.TipoUsuario;
-import com.compasso.duvidas.entities.Turma;
-import lombok.Data;
-
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
+import com.compasso.duvidas.constants.TipoUsuario;
+
+import lombok.Data;
 
 @Data
 public class UsuarioFormDTO {
     @NotEmpty(message = "nome is required")
     private String nome;
 
-    private Turma turma;
+    private Long turmaId;
 
     @NotEmpty(message = "email is required")
     private	String email;
