@@ -2,6 +2,7 @@ package com.compasso.duvidas.controllers;
 
 import com.compasso.duvidas.dto.TurmaDTO;
 import com.compasso.duvidas.dto.TurmaFormDTO;
+import com.compasso.duvidas.dto.UsuarioFormDTO;
 import com.compasso.duvidas.services.TurmaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,5 +31,18 @@ public class TurmaController {
     @GetMapping
     public ResponseEntity<Page<TurmaDTO>> findAll(@PageableDefault Pageable page){
         return ResponseEntity.ok(turmaService.findAll(page));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) { return turmaService.findById(id); }
+
+    @PutMapping("{/id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TurmaFormDTO form) {
+        return turmaService.update(id, form);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody UsuarioFormDTO form) {
+        return turmaService.delete(id);
     }
 }

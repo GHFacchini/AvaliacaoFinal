@@ -1,9 +1,7 @@
 package com.compasso.duvidas.services;
 
-import com.compasso.duvidas.entities.Curso;
-import com.compasso.duvidas.entities.Usuario;
-import com.compasso.duvidas.repositories.CursoRepository;
-import com.compasso.duvidas.repositories.UsuarioRepository;
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,13 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
 import com.compasso.duvidas.dto.TopicoDTO;
 import com.compasso.duvidas.dto.TopicoFormDTO;
+import com.compasso.duvidas.entities.Curso;
 import com.compasso.duvidas.entities.Topico;
+import com.compasso.duvidas.entities.Usuario;
+import com.compasso.duvidas.repositories.CursoRepository;
 import com.compasso.duvidas.repositories.TopicoRepository;
-
-import java.util.Optional;
+import com.compasso.duvidas.repositories.UsuarioRepository;
 
 @Service
 public class TopicoServiceImpl implements TopicoService{

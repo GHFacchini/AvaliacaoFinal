@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 
 @Entity
@@ -27,6 +28,8 @@ public class Resposta {
 	@ManyToOne
 	@JsonBackReference
 	private Topico topico;
+	
+	private String mensagem;
 	
 	private LocalDateTime dataCriacao = LocalDateTime.now();
 	

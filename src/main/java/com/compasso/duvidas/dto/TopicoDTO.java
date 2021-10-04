@@ -7,6 +7,7 @@ import com.compasso.duvidas.constants.StatusTopico;
 import com.compasso.duvidas.entities.Curso;
 import com.compasso.duvidas.entities.Resposta;
 import com.compasso.duvidas.entities.Topico;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class TopicoDTO {
 	private Long id;
 	private String titulo;
 	private String descricao;
+	@JsonIgnore
 	private List<Resposta> respostas;
 	private LocalDateTime dataCriacao;
 	private String autor;

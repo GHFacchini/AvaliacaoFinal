@@ -1,9 +1,6 @@
 package com.compasso.duvidas.controllers;
 
-import com.compasso.duvidas.dto.TopicoDTO;
-import com.compasso.duvidas.dto.TopicoFormDTO;
-import com.compasso.duvidas.dto.UsuarioDTO;
-import com.compasso.duvidas.dto.UsuarioFormDTO;
+import com.compasso.duvidas.dto.*;
 import com.compasso.duvidas.repositories.UsuarioRepository;
 import com.compasso.duvidas.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,19 @@ public class UsuarioController {
     public ResponseEntity<Page<UsuarioDTO>> findAll(@PageableDefault Pageable page,
                                                     @RequestParam(required = false)String nome){
         return ResponseEntity.ok(usuarioService.findAll(page, nome));
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) { return usuarioService.findById(id); }
+
+    @PutMapping("{/id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UsuarioFormDTO form) {
+        return usuarioService.update(id, form);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody UsuarioFormDTO form) {
+        return usuarioService.delete(id);
     }
 
     /* adicionar aluno à uma determinada turma

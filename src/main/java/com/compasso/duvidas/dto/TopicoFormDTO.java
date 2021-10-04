@@ -1,9 +1,6 @@
 package com.compasso.duvidas.dto;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-import com.compasso.duvidas.entities.Curso;
 
 import lombok.Data;
 
