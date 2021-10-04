@@ -37,7 +37,7 @@ public class RespostaController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<RespostaDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<?> findById(@PathVariable Long id) {
 		return respostaService.findById(id);
 	}
 	
@@ -47,7 +47,7 @@ public class RespostaController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<RespostaDTO> delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable Long id) {
 		return respostaService.delete(id);
 	}
 }
