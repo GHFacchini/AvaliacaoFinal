@@ -35,7 +35,7 @@ public class UsuarioController {
     }
 
     /* adicionar aluno à uma determinada turma
-    @GetMapping("/turmas/")
+    @GetMapping 
     public ResponseEntity<UsuarioDTO> adicionarEmTurma(){
     } */
 

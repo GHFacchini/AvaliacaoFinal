@@ -19,7 +19,7 @@ public class CursoFormDTO {
 	@NotNull(message = "categoria is required")
 	@Getter private Categoria categoria;
 	
-	
+
 	public void setCategoria(String categoria) {
 		this.categoria = Categoria.valueOf(categoria.toUpperCase());
 	}

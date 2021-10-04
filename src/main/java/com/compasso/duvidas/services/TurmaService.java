@@ -17,4 +17,6 @@ public interface TurmaService {
     ResponseEntity<TurmaDTO> update(Long id,TurmaFormDTO form);
 
     ResponseEntity<TurmaDTO> delete(Long id);
+
+
 }
