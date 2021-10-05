@@ -1,5 +1,6 @@
 package com.compasso.duvidas.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -47,7 +48,9 @@ public class RespostaServiceImpl implements RespostaService{
 		entity.setSolucao(form.getSolucao());
 		entity.setMensagem(form.getMensagem());
 		
-		topico.get().setAutor(autor.get());
+		List<Resposta> respostas = topico.get().getRespostas();
+		respostas.add(entity);
+		topico.get().setRespostas(respostas);
 		
 		respostaRepository.save(entity);
 		topicoRepository.save(topico.get());
@@ -86,7 +89,9 @@ public class RespostaServiceImpl implements RespostaService{
 						entity.setTopico(topico.get());
 						entity.setAutor(autor.get());
 						
-						topico.get().setAutor(autor.get());
+						List<Resposta> respostas = topico.get().getRespostas();
+						respostas.add(entity);
+						topico.get().setRespostas(respostas);
 						topicoRepository.save(topico.get());
 					} else return ((BodyBuilder) ResponseEntity.notFound()).body("Tópico não encontrado"); 
 				} else return ((BodyBuilder) ResponseEntity.notFound()).body("Usuário autor não encontrado"); 
