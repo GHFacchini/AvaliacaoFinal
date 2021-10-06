@@ -31,6 +31,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 
     @Override
+    @Transactional
     public ResponseEntity<UsuarioDTO> save(UsuarioFormDTO form) {
         Usuario entity = new Usuario();
             entity.setNome(form.getNome());
@@ -105,6 +106,7 @@ public class UsuarioServiceImpl implements UsuarioService{
     }
 
     @Override
+    @Transactional
     public ResponseEntity<UsuarioDTO> delete(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if(usuario.isPresent()){

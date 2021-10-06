@@ -39,8 +39,8 @@ public class TopicoController {
 		return ResponseEntity.ok(topicoService.findAll(page, titulo));
 	}
 
-	/*@GetMapping("/{id}")
-	public ResponseEntity<TopicoDTO> findById(@PathVariable Long id){ return topicoService.findById(id);}*/
+	@GetMapping("/{id}")
+	public ResponseEntity<TopicoDTO> findById(@PathVariable Long id){ return topicoService.findById(id);}
 
 
 	@PutMapping("/{id}")
@@ -48,7 +48,7 @@ public class TopicoController {
 		return topicoService.update(id, form);
 	}
 
-	@DeleteMapping
+	@DeleteMapping("/{id}")
 	public ResponseEntity<TopicoDTO> delete(@PathVariable Long id){ return topicoService.delete(id);}
 
 	@GetMapping("/fechar/{id}")

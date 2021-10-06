@@ -19,6 +19,8 @@ import com.compasso.duvidas.repositories.CursoRepository;
 import com.compasso.duvidas.repositories.TopicoRepository;
 import com.compasso.duvidas.repositories.UsuarioRepository;
 
+import javax.transaction.Transactional;
+
 @Service
 public class TopicoServiceImpl implements TopicoService{
 	
@@ -36,6 +38,7 @@ public class TopicoServiceImpl implements TopicoService{
 	private ModelMapper mapper;
 	
 	@Override
+	@Transactional
 	public ResponseEntity<TopicoDTO> save(TopicoFormDTO form) {
 		Topico entity = new Topico();
 		Optional<Usuario> autorOptional = usuarioRepository.findById(form.getAutorId());
@@ -77,6 +80,7 @@ public class TopicoServiceImpl implements TopicoService{
 	}
 
 	@Override
+	@Transactional
 	public ResponseEntity<?> close(Long id) {
 		Optional<Topico> topico = topicoRepository.findById(id);
 		if (topico.isPresent()) {
@@ -101,6 +105,7 @@ public class TopicoServiceImpl implements TopicoService{
 	}
 
 	@Override
+	@Transactional
 	public ResponseEntity<TopicoDTO> update(Long id, TopicoFormDTO form) {
 		Optional<Topico> topico = topicoRepository.findById(id);
 		if(topico.isPresent()){
@@ -122,6 +127,7 @@ public class TopicoServiceImpl implements TopicoService{
 	}
 
 	@Override
+	@Transactional
 	public ResponseEntity<TopicoDTO> delete(Long id) {
 		Optional<Topico> topico = topicoRepository.findById(id);
 		if(topico.isPresent()){
