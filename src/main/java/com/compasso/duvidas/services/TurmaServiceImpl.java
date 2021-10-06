@@ -5,7 +5,9 @@ import com.compasso.duvidas.dto.TurmaFormDTO;
 
 
 import com.compasso.duvidas.entities.Turma;
+import com.compasso.duvidas.entities.Usuario;
 import com.compasso.duvidas.repositories.TurmaRepository;
+import com.compasso.duvidas.repositories.UsuarioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,11 +26,26 @@ public class TurmaServiceImpl implements TurmaService{
     private TurmaRepository turmaRepository;
 
     @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
     private ModelMapper mapper;
 
     @Override
+    @Transactional
     public TurmaDTO save(TurmaFormDTO form) {
-        Turma entity = turmaRepository.save(mapper.map(form,  Turma.class));
+        Turma entity = new Turma();
+        entity.setNome(form.getNome());
+        if(form.getUsuariosIds() != null){
+            for(Long usuarioId : form.getUsuariosIds()){
+                Optional<Usuario> usuarioOptional = usuarioRepository.findById(usuarioId);
+                if(usuarioOptional.isPresent()){
+                    entity.getUsuarios().add(usuarioOptional.get());
+                    System.out.println(usuarioOptional.get());
+                }
+            }
+        }
+        turmaRepository.save(entity);
         return mapper.map(entity, TurmaDTO.class);
     }
 
@@ -49,28 +66,31 @@ public class TurmaServiceImpl implements TurmaService{
 
     @Override
     @Transactional
+    //falta adicionar os moderadores
     public ResponseEntity<TurmaDTO> update(Long id, TurmaFormDTO form) {
-        Optional<Turma> turma = turmaRepository.findById(id);
-        if(turma.isPresent()){
-            Turma entity = turma.get();
-            if(form.getNome() != null)
-                entity.setNome(form.getNome());
-            if(form.getUsuarios() != null)
-                entity.setUsuarios((form.getUsuarios()));
-            if(form.getModeradores() != null)
-                entity.setModeradores(form.getModeradores());
-
+        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+        if(turmaOptional.isPresent()){
+            Turma entity = turmaOptional.get();
+            entity.setNome(form.getNome());
+            if(form.getUsuariosIds() != null){
+                for(Long usuarioId : form.getUsuariosIds()){
+                    Optional<Usuario> usuarioOptional = usuarioRepository.findById(usuarioId);
+                    if(usuarioOptional.isPresent()){
+                        entity.getUsuarios().add(usuarioOptional.get());
+                        System.out.println(usuarioOptional.get());
+                    }
+                }
+            }
             turmaRepository.save(entity);
-
             return ResponseEntity.ok().body(mapper.map(entity, TurmaDTO.class));
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
 
 
     }
 
     @Override
+    @Transactional
     public ResponseEntity<TurmaDTO> delete(Long id) {
         Optional<Turma> turma = turmaRepository.findById(id);
         if(turma.isPresent()){

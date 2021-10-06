@@ -32,6 +32,11 @@ public class Turma {
 	@ManyToMany
 	private List<Usuario> moderadores = new ArrayList<>();
 
+	@OneToMany
+	@JsonManagedReference
+	private List<Sprint> sprints = new ArrayList<>();
+
+
 
 	public void adicionarUsuario(Usuario usuario){this.getUsuarios().add(usuario);}
 }

@@ -12,8 +12,8 @@ public class TurmaFormDTO {
     @NotEmpty
     private String nome;
 
-    private List<Usuario> usuarios;
+    private List<Long> usuariosIds;
 
-    private List<Usuario> moderadores;
+    private List<Long> moderadoresIds;
 
 }

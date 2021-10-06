@@ -1,5 +1,6 @@
 package com.compasso.duvidas.dto;
 
+import com.compasso.duvidas.entities.Sprint;
 import com.compasso.duvidas.entities.Turma;
 import com.compasso.duvidas.entities.Usuario;
 import lombok.Data;
@@ -20,6 +21,8 @@ public class TurmaDTO {
     private List<Usuario> usuarios = new ArrayList<>();
 
     private List<Usuario> moderadores = new ArrayList<>();
+
+    private List<Sprint> sprints = new ArrayList<>();
 
     public TurmaDTO(Turma turma) {
         this.id = turma.getId();
