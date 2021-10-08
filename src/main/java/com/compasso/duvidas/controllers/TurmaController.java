@@ -1,11 +1,10 @@
 package com.compasso.duvidas.controllers;
 
-import com.compasso.duvidas.dto.TurmaDTO;
-import com.compasso.duvidas.dto.TurmaFormDTO;
-import com.compasso.duvidas.dto.UsuarioFormDTO;
+import com.compasso.duvidas.dto.*;
 import com.compasso.duvidas.services.TurmaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -14,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/turmas")
@@ -24,8 +24,7 @@ public class TurmaController {
 
     @PostMapping
     public ResponseEntity<TurmaDTO> save(@RequestBody @Valid TurmaFormDTO form){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(turmaService.save(form));
+        return turmaService.save(form);
     }
 
     @GetMapping
@@ -35,6 +34,18 @@ public class TurmaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) { return turmaService.findById(id); }
+
+    @GetMapping("/{id}/sprints")
+    public ResponseEntity<List<SprintDTO>> findAllSprints(@PathVariable Long id){
+        return turmaService.findTurmaSprints(id);
+    }
+
+    @PostMapping("/{id}/sprints")
+    public ResponseEntity<TurmaDTO> addSprint(@PathVariable Long id, @RequestBody TurmaAddSprintFormDTO Form){
+        return turmaService.addSprints(id ,Form);
+    }
+
+
 
     @PutMapping("{/id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TurmaFormDTO form) {
