@@ -1,6 +1,7 @@
 package com.compasso.duvidas.dto;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -12,10 +13,11 @@ public class TopicoFormDTO {
 	
 	@NotEmpty(message = "descricao is required")
 	private String descricao;
-	
-//	@NotNull(message = "curso is required")
+
+	@NotNull(message = "cursoId is required")
 	private Long cursoId;
 
+	@NotNull(message = "autorId is required")
 	private Long autorId;
 
 }

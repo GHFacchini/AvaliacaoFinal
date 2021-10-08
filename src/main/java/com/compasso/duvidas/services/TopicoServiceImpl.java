@@ -44,6 +44,7 @@ public class TopicoServiceImpl implements TopicoService{
 		Optional<Usuario> autorOptional = usuarioRepository.findById(form.getAutorId());
 		Optional<Curso> cursoOptional = cursoRepository.findById(form.getCursoId());
 
+
 		if(autorOptional.isPresent() && cursoOptional.isPresent()) {
 			entity.setTitulo(form.getTitulo());
 			entity.setDescricao(form.getDescricao());
@@ -54,13 +55,12 @@ public class TopicoServiceImpl implements TopicoService{
 			TopicoDTO topicoDTO = mapper.map(entity, TopicoDTO.class);
 
 			Curso curso = cursoOptional.get();
-			curso.adicionarTopico(entity);
+			curso.getTopicos().add(entity);
 			cursoRepository.save(curso);
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(topicoDTO);
 		}
 		return ResponseEntity.notFound().build();
-
 
 	}
 
