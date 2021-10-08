@@ -34,10 +34,6 @@ public class Curso {
 
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="curso")
 	@JsonManagedReference
-	private List<Topico> topicos = new ArrayList<>();;
+	private List<Topico> topicos = new ArrayList<>();
 
-
-	public void adicionarTopico(Topico topico){
-		this.getTopicos().add(topico);
-	}
 }
