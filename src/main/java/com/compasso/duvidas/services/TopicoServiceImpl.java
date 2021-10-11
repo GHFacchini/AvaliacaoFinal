@@ -2,6 +2,8 @@ package com.compasso.duvidas.services;
 
 import java.util.Optional;
 
+import com.compasso.duvidas.entities.Resposta;
+import com.compasso.duvidas.repositories.RespostaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,8 @@ public class TopicoServiceImpl implements TopicoService{
 	@Autowired
 	private CursoRepository cursoRepository;
 
+	@Autowired
+	private RespostaRepository respostaRepository;
 	
 	@Autowired
 	private ModelMapper mapper;
@@ -129,9 +133,12 @@ public class TopicoServiceImpl implements TopicoService{
 	@Override
 	@Transactional
 	public ResponseEntity<TopicoDTO> delete(Long id) {
-		Optional<Topico> topico = topicoRepository.findById(id);
-		if(topico.isPresent()){
-			topicoRepository.delete(topico.get());
+		Optional<Topico> topicoOptional = topicoRepository.findById(id);
+		if(topicoOptional.isPresent()){
+			for(Resposta resposta: topicoOptional.get().getRespostas()){
+				respostaRepository.delete(resposta);
+			}
+			topicoRepository.delete(topicoOptional.get());
 			return ResponseEntity.ok().build();
 		} else{
 			return ResponseEntity.notFound().build();

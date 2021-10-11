@@ -27,7 +27,7 @@ public class RespostaController {
 	private RespostaService respostaService;
 	
 	@PostMapping
-	public ResponseEntity<RespostaDTO> save(@RequestBody @Valid RespostaFormDTO form) {
+	public ResponseEntity<?> save(@RequestBody @Valid RespostaFormDTO form) {
 		return respostaService.save(form);
 	}
 	
@@ -45,9 +45,16 @@ public class RespostaController {
 	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody RespostaFormDTO form) {
 		return respostaService.update(id, form);
 	}
+	//não sei se é a melhor forma de representar a requisicao
+	@PutMapping("/{id}/solucao")
+	public ResponseEntity<?> setSolucao(@PathVariable Long id){
+		return respostaService.setSolucao(id);
+	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		return respostaService.delete(id);
 	}
+
+
 }

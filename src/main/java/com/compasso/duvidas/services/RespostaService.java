@@ -11,7 +11,7 @@ import com.compasso.duvidas.dto.RespostaFormDTO;
 
 public interface RespostaService {
 
-	ResponseEntity<RespostaDTO> save(@Valid RespostaFormDTO form);
+	ResponseEntity<?> save(@Valid RespostaFormDTO form);
 
 	Page<RespostaDTO> findAll(Pageable page);
 
@@ -20,5 +20,7 @@ public interface RespostaService {
 	ResponseEntity<?> update(Long id, RespostaFormDTO form);
 
 	ResponseEntity<RespostaDTO> delete(Long id);
+
+	ResponseEntity<?> setSolucao(Long id);
 
 }
