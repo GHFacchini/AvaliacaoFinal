@@ -35,4 +35,18 @@ public class Turma {
 
 
 	public void adicionarUsuario(Usuario usuario){this.getUsuarios().add(usuario);}
+
+	@Override
+	public String toString() {
+		List<Long> usuariosIds = new ArrayList<>();
+		for(Usuario usuario : this.usuarios){
+			usuariosIds.add(usuario.getId());
+		}
+		return "Turma{" +
+				"id=" + id +
+				", nome='" + nome + '\'' +
+				", usuarios=" + usuariosIds +
+				", sprints=" + sprints +
+				'}';
+	}
 }

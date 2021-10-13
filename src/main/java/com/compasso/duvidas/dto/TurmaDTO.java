@@ -25,9 +25,10 @@ public class TurmaDTO {
     public TurmaDTO(Turma turma) {
         this.id = turma.getId();
         this.nome = turma.getNome();
+
         List<Long> usuarios = new ArrayList<>();
         for(Usuario usuario : turma.getUsuarios()){
-            System.out.println(usuario.getNome());
+            usuarios.add(usuario.getId());
         }
         this.usuariosIds = usuarios;
     }

@@ -27,7 +27,7 @@ public class UsuarioDTO {
         this.nome = usuario.getNome();
         List<Long> turmas = new ArrayList<>();
         for(Turma turma : usuario.getTurmas()){
-            turmas.add(usuario.getId());
+            turmas.add(turma.getId());
         }
         this.turmasIds = turmas;
         this.email = usuario.getEmail();
