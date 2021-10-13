@@ -52,8 +52,8 @@ public class TurmaController {
         return turmaService.update(id, form);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody UsuarioFormDTO form) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         return turmaService.delete(id);
     }
 }

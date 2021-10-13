@@ -38,13 +38,16 @@ public class UsuarioServiceImpl implements UsuarioService{
             entity.setEmail(form.getEmail());
             entity.setSenha(form.getSenha());
             entity.setTipoUsuario(form.getTipoUsuario());
-            if(form.getTurmaId() != null){
-                Optional<Turma> turmaOptional = turmaRepository.findById(form.getTurmaId());
-                if(turmaOptional.isPresent()) {
-                    entity.setTurma(turmaOptional.get());
+            if(form.getTurmasIds() != null){
+                for(Long turmaId: form.getTurmasIds()){
+                    Optional<Turma> turmasOptional = turmaRepository.findById(turmaId);
+                    if(turmasOptional.isPresent()) {
+                        entity.getTurmas().add((turmasOptional.get()));
+                }
+
                     usuarioRepository.save(entity);
 
-                    Turma turma = turmaOptional.get();
+                    Turma turma = turmasOptional.get();
                     turma.adicionarUsuario(entity);
                     turmaRepository.save(turma);
                 }
@@ -52,7 +55,7 @@ public class UsuarioServiceImpl implements UsuarioService{
                 usuarioRepository.save(entity);
             }
 
-            UsuarioDTO usuarioDTO = mapper.map(entity, UsuarioDTO.class);
+            UsuarioDTO usuarioDTO = new UsuarioDTO(entity);
 
 
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
@@ -71,9 +74,9 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     public ResponseEntity<UsuarioDTO> findById(Long id) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if(usuario.isPresent()){
-            return ResponseEntity.ok().body(mapper.map(usuario.get(), UsuarioDTO.class));
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if(usuarioOptional.isPresent()){
+            return ResponseEntity.ok().body(new UsuarioDTO(usuarioOptional.get()));
         }
         return ResponseEntity.notFound().build();
     }
@@ -86,12 +89,16 @@ public class UsuarioServiceImpl implements UsuarioService{
             Usuario entity = usuario.get();
             if(form.getNome() != null)
                 entity.setNome(form.getNome());
-            if(form.getTurmaId() != null){
-                Optional<Turma> turmaOptional = turmaRepository.findById(form.getTurmaId());
-                if(turmaOptional.isPresent()) {
-                    entity.setTurma(turmaOptional.get());
+            if(form.getTurmasIds() != null){
+                for(Long turmaId: form.getTurmasIds()){
+                    Optional<Turma> turmasOptional = turmaRepository.findById(turmaId);
+                    if(turmasOptional.isPresent()) {
+                        entity.getTurmas().add((turmasOptional.get()));
+                    }
 
-                    Turma turma = turmaOptional.get();
+                    usuarioRepository.save(entity);
+
+                    Turma turma = turmasOptional.get();
                     turma.adicionarUsuario(entity);
                     turmaRepository.save(turma);
                 }

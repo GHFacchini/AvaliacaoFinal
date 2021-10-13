@@ -18,16 +18,17 @@ public class TurmaDTO {
 
     private String nome;
 
-    private List<Usuario> usuarios = new ArrayList<>();
-
-    private List<Usuario> moderadores = new ArrayList<>();
+    private List<Long> usuariosIds;
 
     private List<Sprint> sprints = new ArrayList<>();
 
     public TurmaDTO(Turma turma) {
         this.id = turma.getId();
         this.nome = turma.getNome();
-        this.usuarios = turma.getUsuarios();
-        this.moderadores = turma.getModeradores();
+        List<Long> usuarios = new ArrayList<>();
+        for(Usuario usuario : turma.getUsuarios()){
+            System.out.println(usuario.getNome());
+        }
+        this.usuariosIds = usuarios;
     }
 }

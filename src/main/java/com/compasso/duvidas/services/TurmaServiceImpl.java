@@ -52,12 +52,16 @@ public class TurmaServiceImpl implements TurmaService {
             for (Long usuarioId : form.getUsuariosIds()) {
                 Optional<Usuario> usuarioOptional = usuarioRepository.findById(usuarioId);
                 if (usuarioOptional.isPresent()) {
+                    System.out.println(usuarioOptional.get());
                     entity.getUsuarios().add(usuarioOptional.get());
+                    usuarioOptional.get().getTurmas().add(entity);
+                    turmaRepository.save(entity);
+                    usuarioRepository.save(usuarioOptional.get());
                 }
             }
         }
-        turmaRepository.save(entity);
-        TurmaDTO turmaDTO = mapper.map(entity, TurmaDTO.class);
+
+        TurmaDTO turmaDTO = new TurmaDTO(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(turmaDTO);
     }
 

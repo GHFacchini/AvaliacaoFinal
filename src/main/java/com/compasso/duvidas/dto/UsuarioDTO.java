@@ -6,6 +6,9 @@ import com.compasso.duvidas.entities.Usuario;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class UsuarioDTO {
@@ -13,7 +16,7 @@ public class UsuarioDTO {
 
     private String nome;
 
-    private Turma turma;
+    private List<Long> turmasIds;
 
     private	String email;
 
@@ -22,8 +25,14 @@ public class UsuarioDTO {
     public UsuarioDTO(Usuario usuario) {
         this.id = usuario.getId();
         this.nome = usuario.getNome();
-        this.turma = usuario.getTurma();
+        List<Long> turmas = new ArrayList<>();
+        for(Turma turma : usuario.getTurmas()){
+            turmas.add(usuario.getId());
+        }
+        this.turmasIds = turmas;
         this.email = usuario.getEmail();
         this.tipoUsuario = usuario.getTipoUsuario();
     }
+
+
 }

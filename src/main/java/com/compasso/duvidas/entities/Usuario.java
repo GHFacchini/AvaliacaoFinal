@@ -1,18 +1,15 @@
 package com.compasso.duvidas.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.compasso.duvidas.constants.TipoUsuario;
+import com.compasso.duvidas.dto.TurmaDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
@@ -24,13 +21,13 @@ public class Usuario {
 	
 	private String nome;
 
-	@ManyToOne
-	@JsonBackReference
-	private Turma turma;
+	@ManyToMany
+	private List<Turma> turmas = new ArrayList<>();
 	
 	private	String email;
 	
 	private String senha;
+
 	@Enumerated(EnumType.STRING)
 	private TipoUsuario tipoUsuario;
 
@@ -40,7 +37,7 @@ public class Usuario {
 		return "Usuario{" +
 				"id=" + id +
 				", nome='" + nome + '\'' +
-				", turma=" + turma +
+				", turmas=" + turmas +
 				", email='" + email + '\'' +
 				", tipoUsuario=" + tipoUsuario +
 				'}';

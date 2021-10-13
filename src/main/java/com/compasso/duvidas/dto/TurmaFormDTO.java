@@ -14,6 +14,6 @@ public class TurmaFormDTO {
 
     private List<Long> usuariosIds;
 
-    private List<Long> moderadoresIds;
+    //private List<Long> moderadoresIds;
 
 }

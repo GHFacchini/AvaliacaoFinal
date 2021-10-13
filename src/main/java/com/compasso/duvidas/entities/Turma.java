@@ -25,12 +25,8 @@ public class Turma {
 	
 	private String nome;
 	
-	@OneToMany
-	@JsonManagedReference
-	private List<Usuario> usuarios = new ArrayList<>();
-	
 	@ManyToMany
-	private List<Usuario> moderadores = new ArrayList<>();
+	private List<Usuario> usuarios = new ArrayList<>();
 
 	@OneToMany
 	@JsonManagedReference

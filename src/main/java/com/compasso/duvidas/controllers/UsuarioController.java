@@ -38,8 +38,8 @@ public class UsuarioController {
         return usuarioService.update(id, form);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody UsuarioFormDTO form) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         return usuarioService.delete(id);
     }
 
