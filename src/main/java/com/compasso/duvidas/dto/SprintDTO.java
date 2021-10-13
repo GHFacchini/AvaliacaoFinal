@@ -5,7 +5,7 @@ import com.compasso.duvidas.entities.Sprint;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -16,12 +16,19 @@ public class SprintDTO {
 
     private String titulo;
 
-    @OneToMany
-    private List<Curso> cursos;
+    private List<String> cursos;
 
     public SprintDTO(Sprint sprint) {
         this.id = sprint.getId();
         this.titulo = sprint.getTitulo();
-        this.cursos = sprint.getCursos();
+        cursosInfo(sprint);
+    }
+
+    private void cursosInfo(Sprint sprint){
+        List<String> cursos = new ArrayList<>();
+        for(Curso curso : sprint.getCursos()){
+            cursos.add("Id: " + curso.getId() + " Nome: " + curso.getNome());
+        }
+        this.cursos = cursos;
     }
 }

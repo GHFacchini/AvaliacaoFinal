@@ -49,7 +49,7 @@ public class SprintServiceImpl implements SprintService{
         }
 
         sprintRepository.save(entity);
-        SprintDTO sprintDTO = mapper.map(entity, SprintDTO.class);
+        SprintDTO sprintDTO = new SprintDTO(entity);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(sprintDTO);
     }
@@ -101,5 +101,25 @@ public class SprintServiceImpl implements SprintService{
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> addSprint(Long id1, Long id2) {
+        Optional<Sprint> sprintOptional = sprintRepository.findById(id1);
+        if(!sprintOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sprint não encontrada");
+        }
+        Optional<Curso> cursoOptional = cursoRepository.findById(id2);
+        if(!cursoOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
+        }
+        if(sprintOptional.get().getCursos().contains(cursoOptional.get())){
+            return ResponseEntity.badRequest().body("Essa Sprint já possui esse curso");
+        }
+        sprintOptional.get().getCursos().add(cursoOptional.get());
+        sprintRepository.save(sprintOptional.get());
+        SprintDTO sprintDTO = new SprintDTO(sprintOptional.get());
+        return ResponseEntity.ok().body(sprintDTO);
     }
 }

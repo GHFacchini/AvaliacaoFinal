@@ -18,4 +18,5 @@ public interface SprintService {
 
     ResponseEntity<SprintDTO> delete(Long id);
 
+    ResponseEntity<?> addSprint(Long id1, Long id2);
 }
