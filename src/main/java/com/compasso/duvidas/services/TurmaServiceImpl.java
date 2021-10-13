@@ -146,7 +146,7 @@ public class TurmaServiceImpl implements TurmaService {
     }
 
     @Override
-    public ResponseEntity<TurmaDTO> addSprints(Long id, TurmaAddSprintFormDTO form) {
+    public ResponseEntity<?> addSprints(Long id, TurmaAddSprintFormDTO form) {
         Optional<Turma> turmaOptional = turmaRepository.findById(id);
         if (turmaOptional.isPresent()) {
             Turma entity = turmaOptional.get();
@@ -154,13 +154,16 @@ public class TurmaServiceImpl implements TurmaService {
                 for (Long sprintId : form.getSprintsIds()) {
                     Optional<Sprint> sprintOptional = sprintRepository.findById(sprintId);
                     if (sprintOptional.isPresent()) {
+                        if((turmaOptional.get().getSprints().contains(sprintOptional.get()))){
+                            return ResponseEntity.badRequest().body("Essa turma já possui essa sprint");
+                        }
                         entity.getSprints().add(sprintOptional.get());
-                        System.out.println(sprintOptional.get());
                     }
                 }
             }
             turmaRepository.save(entity);
-            return ResponseEntity.ok().body(mapper.map(entity, TurmaDTO.class));
+            TurmaDTO turmaDTO = new TurmaDTO(entity);
+            return ResponseEntity.ok().body(turmaDTO);
         }
         return ResponseEntity.notFound().build();
     }

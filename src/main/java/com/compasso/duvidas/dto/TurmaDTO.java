@@ -20,12 +20,24 @@ public class TurmaDTO {
 
     private List<Long> usuariosIds;
 
-    private List<Sprint> sprints = new ArrayList<>();
+    private List<String> sprints = new ArrayList<>();
 
     public TurmaDTO(Turma turma) {
         this.id = turma.getId();
         this.nome = turma.getNome();
+        usuariosInfo(turma);
+        sprintsInfo(turma);
+    }
 
+    private void sprintsInfo(Turma turma) {
+        List<String> sprints = new ArrayList<>();
+        for(Sprint sprint : turma.getSprints()){
+            sprints.add("Id: " + sprint.getId() + " Título: " + sprint.getTitulo());
+        }
+        this.sprints = sprints;
+    }
+
+    private void usuariosInfo(Turma turma) {
         List<Long> usuarios = new ArrayList<>();
         for(Usuario usuario : turma.getUsuarios()){
             usuarios.add(usuario.getId());

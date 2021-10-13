@@ -41,7 +41,7 @@ public class TurmaController {
     }
 
     @PostMapping("/{id}/sprints")
-    public ResponseEntity<TurmaDTO> addSprint(@PathVariable Long id, @RequestBody TurmaAddSprintFormDTO Form){
+    public ResponseEntity<?> addSprint(@PathVariable Long id, @RequestBody TurmaAddSprintFormDTO Form){
         return turmaService.addSprints(id ,Form);
     }
 

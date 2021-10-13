@@ -24,5 +24,5 @@ public interface TurmaService {
 
     ResponseEntity<List<SprintDTO>> findTurmaSprints(Long id);
 
-    ResponseEntity<TurmaDTO> addSprints(Long id, TurmaAddSprintFormDTO form);
+    ResponseEntity<?> addSprints(Long id, TurmaAddSprintFormDTO form);
 }
