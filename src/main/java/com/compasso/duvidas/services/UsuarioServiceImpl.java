@@ -1,11 +1,7 @@
 package com.compasso.duvidas.services;
 
-import com.compasso.duvidas.dto.UsuarioDTO;
-import com.compasso.duvidas.dto.UsuarioFormDTO;
-import com.compasso.duvidas.entities.Turma;
-import com.compasso.duvidas.entities.Usuario;
-import com.compasso.duvidas.repositories.TurmaRepository;
-import com.compasso.duvidas.repositories.UsuarioRepository;
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import com.compasso.duvidas.dto.UsuarioDTO;
+import com.compasso.duvidas.dto.UsuarioFormDTO;
+import com.compasso.duvidas.entities.Turma;
+import com.compasso.duvidas.entities.Usuario;
+import com.compasso.duvidas.repositories.TurmaRepository;
+import com.compasso.duvidas.repositories.UsuarioRepository;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService{
