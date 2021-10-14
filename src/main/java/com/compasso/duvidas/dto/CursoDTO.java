@@ -1,5 +1,6 @@
 package com.compasso.duvidas.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.compasso.duvidas.constants.Categoria;
@@ -17,13 +18,21 @@ public class CursoDTO {
 	private Long id;
 	private String nome;
 	private Categoria categoria;
-	private List<Topico> topicos;
+	private List<String> topicosIds = new ArrayList<>();
 	
 	public CursoDTO(Curso curso) {
 		this.id = curso.getId();
 		this.nome = curso.getNome();
 		this.categoria = curso.getCategoria();
-		this.topicos = curso.getTopicos();
+		topicosInfo(curso);
+	}
+
+	private void topicosInfo(Curso curso){
+		List<String> topicos = new ArrayList<>();
+		for(Topico topico : curso.getTopicos()){
+			topicos.add("Id: " + topico.getId() + " Título: "+ topico.getTitulo() +" Status: "+  topico.getStatus());
+		}
+		this.topicosIds = topicos;
 	}
 	
 }

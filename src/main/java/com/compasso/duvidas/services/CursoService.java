@@ -10,7 +10,7 @@ import com.compasso.duvidas.dto.CursoFormDTO;
 
 public interface CursoService {
 
-	CursoDTO save(CursoFormDTO form);
+	ResponseEntity<CursoDTO> save(CursoFormDTO form);
 
 	Page<CursoDTO> findAll(Pageable page);
 

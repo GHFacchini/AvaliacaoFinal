@@ -21,6 +21,7 @@ import com.compasso.duvidas.entities.Usuario;
 import com.compasso.duvidas.repositories.RespostaRepository;
 import com.compasso.duvidas.repositories.TopicoRepository;
 import com.compasso.duvidas.repositories.UsuarioRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RespostaServiceImpl implements RespostaService {
@@ -38,42 +39,44 @@ public class RespostaServiceImpl implements RespostaService {
     private TopicoRepository topicoRepository;
 
     @Override
+    @Transactional
     public ResponseEntity<?> save(RespostaFormDTO form) {
 
         Optional<Topico> topicoOptional = topicoRepository.findById(form.getIdTopico());
         //se não acha o tópcio retorna not found
-        if (topicoOptional.isPresent()) {
-
-            //se o tópico está fechado retorna bad request
-            if (topicoOptional.get().getStatus() == StatusTopico.FECHADO) {
-                return ResponseEntity.badRequest().body("O tópico está fechado");
-            }
-
-            Optional<Usuario> autorOptional = usuarioRepository.findById(form.getIdAutor());
-            //se tudo der certo retorna created com o DTO, se não retorna bad request
-            if (autorOptional.isPresent()) {
-                Resposta entity = new Resposta();
-                entity.setAutor(autorOptional.get());
-                entity.setTopico(topicoOptional.get());
-                entity.setMensagem(form.getMensagem());
-
-                List<Resposta> respostas = topicoOptional.get().getRespostas();
-                respostas.add(entity);
-                if (topicoOptional.get().getStatus() == StatusTopico.NAO_RESPONDIDO) {
-                    topicoOptional.get().setStatus(StatusTopico.NAO_SOLUCIONADO);
-                }
-                topicoOptional.get().setRespostas(respostas);
-
-                respostaRepository.save(entity);
-                topicoRepository.save(topicoOptional.get());
-
-                RespostaDTO respostaDTO = mapper.map(entity, RespostaDTO.class);
-
-                return ResponseEntity.status(HttpStatus.CREATED).body(respostaDTO);
-            }
+        if (!topicoOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        //se o tópico está fechado retorna bad request
+        if (topicoOptional.get().getStatus() == StatusTopico.FECHADO) {
+            return ResponseEntity.badRequest().body("O tópico está fechado");
+        }
+
+        Optional<Usuario> autorOptional = usuarioRepository.findById(form.getIdAutor());
+        // se não achar o autor retorna not found
+        if (!autorOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Resposta entity = new Resposta();
+        entity.setAutor(autorOptional.get());
+        entity.setTopico(topicoOptional.get());
+        entity.setMensagem(form.getMensagem());
+
+        List<Resposta> respostas = topicoOptional.get().getRespostas();
+        respostas.add(entity);
+        if (topicoOptional.get().getStatus() == StatusTopico.NAO_RESPONDIDO) {
+            topicoOptional.get().setStatus(StatusTopico.NAO_SOLUCIONADO);
+        }
+        topicoOptional.get().setRespostas(respostas);
+
+        respostaRepository.save(entity);
+        topicoRepository.save(topicoOptional.get());
+
+        RespostaDTO respostaDTO = new RespostaDTO(entity);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(respostaDTO);
+
+
     }
 
 
@@ -86,14 +89,15 @@ public class RespostaServiceImpl implements RespostaService {
 
     @Override
     public ResponseEntity<RespostaDTO> findById(Long id) {
-        Optional<Resposta> resposta = respostaRepository.findById(id);
-        if (resposta.isPresent()) {
-            return ResponseEntity.ok().body(mapper.map(resposta.get(), RespostaDTO.class));
+        Optional<Resposta> respostaOptional = respostaRepository.findById(id);
+        if (respostaOptional.isPresent()) {
+            return ResponseEntity.ok().body(new RespostaDTO(respostaOptional.get()));
         }
         return ResponseEntity.notFound().build();
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> update(Long id, RespostaFormDTO form) {
         Optional<Resposta> resposta = respostaRepository.findById(id);
         if (resposta.isPresent()) {
@@ -118,32 +122,83 @@ public class RespostaServiceImpl implements RespostaService {
                 entity.setMensagem(form.getMensagem());
 
             respostaRepository.save(entity);
-            return ResponseEntity.ok().body(mapper.map(entity, RespostaDTO.class));
+            return ResponseEntity.ok().body(new RespostaDTO(entity));
         }
         return ResponseEntity.notFound().build();
     }
 
     @Override
+    @Transactional
     public ResponseEntity<RespostaDTO> delete(Long id) {
-        Optional<Resposta> resposta = respostaRepository.findById(id);
-        if (resposta.isPresent()) {
-            respostaRepository.delete(resposta.get());
-            return ResponseEntity.ok().build();
+        Optional<Resposta> respostaOptional = respostaRepository.findById(id);
+        if (!respostaOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        if(contaRespostas(respostaOptional.get().getTopico()) == 1){
+            respostaOptional.get().getTopico().setStatus(StatusTopico.NAO_RESPONDIDO);
+        }else{
+            if (respostaOptional.get().getSolucao() && contaSolucoes(respostaOptional.get().getTopico()) == 1) {
+                respostaOptional.get().getTopico().setStatus(StatusTopico.NAO_SOLUCIONADO);
+            }
+        }
+
+        respostaRepository.delete(respostaOptional.get());
+        topicoRepository.save(respostaOptional.get().getTopico());
+        return ResponseEntity.ok().build();
+
+
     }
 
+
+    //inverte valor de solucao (true/false)
+    //utiliza o metodo contaSolucos para que se só houver uma solucao ao trocar o valor dela o topico
+    //volte a ser não solucionado
     @Override
+    @Transactional
     public ResponseEntity<?> setSolucao(Long id) {
         Optional<Resposta> respostaOptional = respostaRepository.findById(id);
-        if (respostaOptional.isPresent()) {
-            Resposta entity = respostaOptional.get();
-            entity.setSolucao(true);
-            entity.getTopico().setStatus(StatusTopico.SOLUCIONADO);
-            respostaRepository.save(entity);
-            return ResponseEntity.ok().build();
+        if (!respostaOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+
+        Resposta entity = respostaOptional.get();
+        //se essa resposta for a solucao
+        if (entity.getSolucao()) {
+            //e for a unica solucao
+            if (contaSolucoes(entity.getTopico()) == 1) {
+                //topico volta a ser não solucionado
+                entity.getTopico().setStatus(StatusTopico.NAO_SOLUCIONADO);
+            }
+        } else {   //se a resposta não era solucao agora o topico estará solucinado
+            entity.getTopico().setStatus(StatusTopico.SOLUCIONADO);
+        }
+        //inverte o valor (true/false)
+        entity.setSolucao(!entity.getSolucao());
+
+        respostaRepository.save(entity);
+
+        topicoRepository.save(entity.getTopico());
+
+        return ResponseEntity.ok().build();
+    }
+
+    //conta quantas solucoes existem
+    private int contaSolucoes(Topico topico) {
+        int cont = 0;
+        for (Resposta resposta : topico.getRespostas()) {
+            if (resposta.getSolucao()) {
+                cont++;
+            }
+        }
+        return cont;
+    }
+
+    private int contaRespostas(Topico topico) {
+        int cont = 0;
+        for (Resposta resposta : topico.getRespostas()){
+            cont++;
+        }
+        return cont;
     }
 
 }

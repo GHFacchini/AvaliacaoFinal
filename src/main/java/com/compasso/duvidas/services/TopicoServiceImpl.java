@@ -24,125 +24,128 @@ import com.compasso.duvidas.repositories.UsuarioRepository;
 import javax.transaction.Transactional;
 
 @Service
-public class TopicoServiceImpl implements TopicoService{
-	
-	@Autowired
-	private TopicoRepository topicoRepository;
+public class TopicoServiceImpl implements TopicoService {
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+    @Autowired
+    private TopicoRepository topicoRepository;
 
-	@Autowired
-	private CursoRepository cursoRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-	@Autowired
-	private RespostaRepository respostaRepository;
-	
-	@Autowired
-	private ModelMapper mapper;
-	
-	@Override
-	@Transactional
-	public ResponseEntity<TopicoDTO> save(TopicoFormDTO form) {
-		Topico entity = new Topico();
-		Optional<Usuario> autorOptional = usuarioRepository.findById(form.getAutorId());
-		Optional<Curso> cursoOptional = cursoRepository.findById(form.getCursoId());
+    @Autowired
+    private CursoRepository cursoRepository;
 
+    @Autowired
+    private RespostaRepository respostaRepository;
 
-		if(autorOptional.isPresent() && cursoOptional.isPresent()) {
-			entity.setTitulo(form.getTitulo());
-			entity.setDescricao(form.getDescricao());
-			entity.setAutor(autorOptional.get());
-			entity.setCurso(cursoOptional.get());
+    @Autowired
+    private ModelMapper mapper;
 
-			topicoRepository.save(entity);
-			TopicoDTO topicoDTO = mapper.map(entity, TopicoDTO.class);
-
-			Curso curso = cursoOptional.get();
-			curso.getTopicos().add(entity);
-			cursoRepository.save(curso);
-
-			return ResponseEntity.status(HttpStatus.CREATED).body(topicoDTO);
-		}
-		return ResponseEntity.notFound().build();
-
-	}
-
-	@Override
-	public Page<TopicoDTO> findAll(Pageable page, String titulo) {
-		Page<Topico> topicos;
-		if(titulo != null){
-			topicos = topicoRepository.findByTituloLike(page, titulo);
-			System.out.println(topicos.getTotalElements());
-		}
-		else{
-			topicos = topicoRepository.findAll(page);
-
-		}
-		Page<TopicoDTO> topicosDTOS = topicos.map(TopicoDTO::new);
-		return topicosDTOS;
-	}
-
-	@Override
-	@Transactional
-	public ResponseEntity<?> close(Long id) {
-		Optional<Topico> topico = topicoRepository.findById(id);
-		if (topico.isPresent()) {
-			Topico topicoFechado = topico.get();
-			topicoFechado.close();
-			topicoRepository.save(topicoFechado);
-			return ResponseEntity.ok().body("Tópico '" + topicoFechado.getTitulo()
-			+ "' (ID: " + topicoFechado.getId() + ") foi FECHADO!");
-		} else
-			return ResponseEntity.notFound().build();
-	}
+    @Override
+    @Transactional
+    public ResponseEntity<TopicoDTO> save(TopicoFormDTO form) {
+        Topico entity = new Topico();
+        Optional<Usuario> autorOptional = usuarioRepository.findById(form.getAutorId());
+        Optional<Curso> cursoOptional = cursoRepository.findById(form.getCursoId());
 
 
-	@Override
-	public ResponseEntity<TopicoDTO> findById(Long id) {
-		Optional<Topico> topico = topicoRepository.findById(id);
-		if(topico.isPresent()){
-			return ResponseEntity.ok().body(mapper.map(topico.get(), TopicoDTO.class));
-		} else{
-			return ResponseEntity.notFound().build();
-		}
-	}
+        if (autorOptional.isPresent() && cursoOptional.isPresent()) {
+            entity.setTitulo(form.getTitulo());
+            entity.setDescricao(form.getDescricao());
+            entity.setAutor(autorOptional.get());
+            entity.setCurso(cursoOptional.get());
 
-	@Override
-	@Transactional
-	public ResponseEntity<TopicoDTO> update(Long id, TopicoFormDTO form) {
-		Optional<Topico> topico = topicoRepository.findById(id);
-		if(topico.isPresent()){
-			Topico entity = topico.get();
-			if(form.getTitulo() != null){
-				entity.setTitulo(form.getTitulo());
-			}
-			if(form.getDescricao() != null){
-				entity.setDescricao(form.getDescricao());
-			}
+            topicoRepository.save(entity);
+            TopicoDTO topicoDTO = new TopicoDTO(entity);
 
-			topicoRepository.save(entity);
+            Curso curso = cursoOptional.get();
+            curso.getTopicos().add(entity);
+            cursoRepository.save(curso);
 
-			return ResponseEntity.ok().body(mapper.map(entity, TopicoDTO.class));
-		} else{
-			return ResponseEntity.notFound().build();
-		}
+            return ResponseEntity.status(HttpStatus.CREATED).body(topicoDTO);
+        }
+        return ResponseEntity.notFound().build();
 
-	}
+    }
 
-	@Override
-	@Transactional
-	public ResponseEntity<TopicoDTO> delete(Long id) {
-		Optional<Topico> topicoOptional = topicoRepository.findById(id);
-		if(topicoOptional.isPresent()){
-			for(Resposta resposta: topicoOptional.get().getRespostas()){
-				respostaRepository.delete(resposta);
-			}
-			topicoRepository.delete(topicoOptional.get());
-			return ResponseEntity.ok().build();
-		} else{
-			return ResponseEntity.notFound().build();
-		}
-	}
+    @Override
+    public Page<TopicoDTO> findAll(Pageable page, String titulo) {
+        Page<Topico> topicos;
+        if (titulo != null) {
+            topicos = topicoRepository.findByTituloLike(page, titulo);
+            System.out.println(topicos.getTotalElements());
+        } else {
+            topicos = topicoRepository.findAll(page);
+
+        }
+        Page<TopicoDTO> topicosDTOS = topicos.map(TopicoDTO::new);
+        return topicosDTOS;
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> close(Long id) {
+        Optional<Topico> topico = topicoRepository.findById(id);
+        if (topico.isPresent()) {
+            Topico topicoFechado = topico.get();
+            topicoFechado.close();
+            topicoRepository.save(topicoFechado);
+            return ResponseEntity.ok().body("Tópico '" + topicoFechado.getTitulo()
+                    + "' (ID: " + topicoFechado.getId() + ") foi FECHADO!");
+        } else
+            return ResponseEntity.notFound().build();
+    }
+
+
+    @Override
+    public ResponseEntity<TopicoDTO> findById(Long id) {
+        Optional<Topico> topicoOptional = topicoRepository.findById(id);
+        if (topicoOptional.isPresent()) {
+            return ResponseEntity.ok().body(new TopicoDTO(topicoOptional.get()));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<TopicoDTO> update(Long id, TopicoFormDTO form) {
+        Optional<Topico> topico = topicoRepository.findById(id);
+        if (topico.isPresent()) {
+            Topico entity = topico.get();
+            if (form.getTitulo() != null) {
+                entity.setTitulo(form.getTitulo());
+            }
+            if (form.getDescricao() != null) {
+                entity.setDescricao(form.getDescricao());
+            }
+
+            topicoRepository.save(entity);
+
+            return ResponseEntity.ok().body(mapper.map(entity, TopicoDTO.class));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<TopicoDTO> delete(Long id) {
+        Optional<Topico> topicoOptional = topicoRepository.findById(id);
+        if (!topicoOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        for (Resposta resposta : topicoOptional.get().getRespostas()) {
+            respostaRepository.delete(resposta);
+        }
+        //remove o tópico da lista de tópicos do curso
+        topicoOptional.get().getCurso().getTopicos().remove(topicoOptional.get());
+        cursoRepository.save(topicoOptional.get().getCurso());
+        topicoRepository.delete(topicoOptional.get());
+        return ResponseEntity.ok().build();
+
+
+    }
 
 }

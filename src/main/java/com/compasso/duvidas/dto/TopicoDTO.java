@@ -1,6 +1,7 @@
 package com.compasso.duvidas.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.compasso.duvidas.constants.StatusTopico;
@@ -15,25 +16,47 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TopicoDTO {
-	
-	private Long id;
-	private String titulo;
-	private String descricao;
-	@JsonIgnore
-	private List<Resposta> respostas;
-	private LocalDateTime dataCriacao;
-	private String autor;
-	private Curso curso;
-	private StatusTopico status;
-	
-	public TopicoDTO(Topico topico) {
-		this.id = topico.getId();
-		this.titulo = topico.getTitulo();
-		this.descricao = topico.getDescricao();
-		this.respostas = topico.getRespostas();
-		this.dataCriacao = topico.getDataCriacao();
-//		this.autor = topico.getAutor().getNome();
-		this.curso = topico.getCurso();
-		this.status = topico.getStatus();
-	}
+
+    private Long id;
+    private String titulo;
+    private String descricao;
+    private List<String> respostas = new ArrayList<>();
+    private LocalDateTime dataCriacao;
+    private String autor;
+    private String curso;
+    private StatusTopico status;
+
+    public TopicoDTO(Topico topico) {
+        this.id = topico.getId();
+        this.titulo = topico.getTitulo();
+        this.descricao = topico.getDescricao();
+        respostasInfo(topico);
+        this.dataCriacao = topico.getDataCriacao();
+        cursoInfo(topico);
+        autorInfo(topico);
+        this.status = topico.getStatus();
+    }
+
+    private void cursoInfo(Topico topico) {
+        this.curso = "Id: " + topico.getCurso().getId() + " | Título: " + topico.getCurso().getNome() +
+                " | Categoria: " + topico.getCurso().getCategoria();
+    }
+
+    private void autorInfo(Topico topico) {
+        this.autor = "Id: " + topico.getAutor().getId() + " | Nome: " + topico.getAutor().getNome() +
+                " | " + topico.getAutor().getTipoUsuario();
+    }
+
+    private void respostasInfo(Topico topico) {
+        List<String> respostas = new ArrayList<>();
+        for (Resposta resposta : topico.getRespostas()) {
+            if (resposta.getSolucao()) {
+                respostas.add("Id: " + resposta.getId() + " **SOLUÇÃO**");
+            } else {
+                respostas.add("Id: " + resposta.getId());
+            }
+        }
+        this.respostas = respostas;
+
+    }
 }

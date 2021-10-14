@@ -13,21 +13,29 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RespostaDTO {
-	
-	private Long id;
-	private Usuario autor;
-	private Topico topico;
-	private String mensagem;
-	private LocalDateTime dataCriacao;
-	private Boolean solucao;
-	
-	public RespostaDTO(Resposta resposta) {
-		this.id = resposta.getId();
-		this.autor = resposta.getAutor();
-		this.topico = resposta.getTopico();
-		this.mensagem = resposta.getMensagem();
-		this.dataCriacao = resposta.getDataCriacao();
-		this.solucao = resposta.getSolucao();
-	}
-	
+
+    private Long id;
+    private String autor;
+    private String topico;
+    private String mensagem;
+    private LocalDateTime dataCriacao;
+    private Boolean solucao;
+
+    public RespostaDTO(Resposta resposta) {
+        this.id = resposta.getId();
+        autorInfo(resposta);
+        topicoInfo(resposta);
+        this.mensagem = resposta.getMensagem();
+        this.dataCriacao = resposta.getDataCriacao();
+        this.solucao = resposta.getSolucao();
+    }
+
+    private void autorInfo(Resposta resposta) {
+        this.autor = "Id: " + resposta.getAutor().getId() + " | nome: " + resposta.getAutor().getNome() +
+                " | " + resposta.getAutor().getTipoUsuario();
+    }
+
+    private void topicoInfo(Resposta resposta){
+        this.topico = "Id: " + resposta.getTopico().getId() + " | Título: " + resposta.getTopico().getTitulo();
+    }
 }

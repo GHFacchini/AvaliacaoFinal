@@ -63,7 +63,7 @@ public class Topico {
 				", respostas=" + respostas +
 				", dataCriacao=" + dataCriacao +
 				", autor=" + autor +
-				", curso=" + curso.getId() +
+				", curso=" + curso+
 				", status=" + status +
 				'}';
 	}

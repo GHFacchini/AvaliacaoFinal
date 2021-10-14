@@ -30,8 +30,7 @@ public class CursoController {
 	
 	@PostMapping
 	public ResponseEntity<CursoDTO> save(@RequestBody @Valid CursoFormDTO form) {
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(cursoService.save(form));
+		return cursoService.save(form);
 	}
 	
 	@GetMapping

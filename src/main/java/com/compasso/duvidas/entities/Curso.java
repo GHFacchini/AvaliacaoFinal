@@ -32,10 +32,23 @@ public class Curso {
 	@Enumerated(EnumType.STRING)
 	private Categoria categoria;
 
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="curso")
+	@OneToMany(cascade=CascadeType.ALL)
 	@JsonManagedReference
 	private List<Topico> topicos = new ArrayList<>();
 
 
+	@Override
+	public String toString() {
+		List<Long> topicosIds = new ArrayList<>();
+		for(Topico topico : this.getTopicos()){
+			topicosIds.add(topico.getId());
+		}
 
+		return "Curso{" +
+				"id=" + id +
+				", nome='" + nome + '\'' +
+				", categoria=" + categoria +
+				", topicos=" + topicosIds +
+				'}';
+	}
 }
