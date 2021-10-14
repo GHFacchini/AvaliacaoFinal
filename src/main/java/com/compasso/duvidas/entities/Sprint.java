@@ -17,9 +17,19 @@ public class Sprint {
 
     private String titulo;
 
-    @OneToMany
-    @JsonManagedReference
+    @ManyToMany
     private List<Curso> cursos = new ArrayList<>();
 
-
+    @Override
+    public String toString() {
+        List<Long> cursosIds = new ArrayList<>();
+        for(Curso curso : this.cursos){
+            cursosIds.add(curso.getId());
+        }
+        return "Sprint{" +
+                "id=" + id +
+                ", titulo='" + titulo + '\'' +
+                ", cursos=" + cursosIds +
+                '}';
+    }
 }

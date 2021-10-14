@@ -36,4 +36,6 @@ public class Curso {
 	@JsonManagedReference
 	private List<Topico> topicos = new ArrayList<>();
 
+
+
 }

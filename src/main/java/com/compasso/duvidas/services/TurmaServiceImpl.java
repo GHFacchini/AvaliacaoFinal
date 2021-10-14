@@ -52,15 +52,22 @@ public class TurmaServiceImpl implements TurmaService {
             for (Long usuarioId : form.getUsuariosIds()) {
                 Optional<Usuario> usuarioOptional = usuarioRepository.findById(usuarioId);
                 if (usuarioOptional.isPresent()) {
-                    System.out.println(usuarioOptional.get());
+
+
                     entity.getUsuarios().add(usuarioOptional.get());
-                    usuarioOptional.get().getTurmas().add(entity);
                     turmaRepository.save(entity);
+
+                    usuarioOptional.get().getTurmas().add(entity);
                     usuarioRepository.save(usuarioOptional.get());
+
+
+                    System.out.println(entity);
                 }
             }
+            TurmaDTO turmaDTO = new TurmaDTO(entity);
+            return ResponseEntity.status(HttpStatus.CREATED).body(turmaDTO);
         }
-
+        turmaRepository.save(entity);
         TurmaDTO turmaDTO = new TurmaDTO(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(turmaDTO);
     }
@@ -74,9 +81,10 @@ public class TurmaServiceImpl implements TurmaService {
 
     @Override
     public ResponseEntity<TurmaDTO> findById(Long id) {
-        Optional<Turma> turma = turmaRepository.findById(id);
-        if (turma.isPresent()) {
-            return ResponseEntity.ok().body(mapper.map(turma.get(), TurmaDTO.class));
+        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+        if (turmaOptional.isPresent()) {
+            TurmaDTO turmaDTO = new TurmaDTO(turmaOptional.get());
+            return ResponseEntity.ok().body(turmaDTO);
         }
         return ResponseEntity.notFound().build();
     }
@@ -109,9 +117,16 @@ public class TurmaServiceImpl implements TurmaService {
     @Override
     @Transactional
     public ResponseEntity<TurmaDTO> delete(Long id) {
-        Optional<Turma> turma = turmaRepository.findById(id);
-        if (turma.isPresent()) {
-            turmaRepository.delete(turma.get());
+        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+        if (turmaOptional.isPresent()) {
+            if(!turmaOptional.get().getUsuarios().isEmpty()){
+                for(Usuario usuario : turmaOptional.get().getUsuarios()){
+                    usuario.getTurmas().remove(turmaOptional.get());
+                    usuarioRepository.save(usuario);
+                }
+                turmaOptional.get().getUsuarios().clear();
+            }
+            turmaRepository.delete(turmaOptional.get());
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
@@ -131,7 +146,7 @@ public class TurmaServiceImpl implements TurmaService {
     }
 
     @Override
-    public ResponseEntity<TurmaDTO> addSprints(Long id, TurmaAddSprintFormDTO form) {
+    public ResponseEntity<?> addSprints(Long id, TurmaAddSprintFormDTO form) {
         Optional<Turma> turmaOptional = turmaRepository.findById(id);
         if (turmaOptional.isPresent()) {
             Turma entity = turmaOptional.get();
@@ -139,13 +154,16 @@ public class TurmaServiceImpl implements TurmaService {
                 for (Long sprintId : form.getSprintsIds()) {
                     Optional<Sprint> sprintOptional = sprintRepository.findById(sprintId);
                     if (sprintOptional.isPresent()) {
+                        if((turmaOptional.get().getSprints().contains(sprintOptional.get()))){
+                            return ResponseEntity.badRequest().body("Essa turma já possui essa sprint");
+                        }
                         entity.getSprints().add(sprintOptional.get());
-                        System.out.println(sprintOptional.get());
                     }
                 }
             }
             turmaRepository.save(entity);
-            return ResponseEntity.ok().body(mapper.map(entity, TurmaDTO.class));
+            TurmaDTO turmaDTO = new TurmaDTO(entity);
+            return ResponseEntity.ok().body(turmaDTO);
         }
         return ResponseEntity.notFound().build();
     }

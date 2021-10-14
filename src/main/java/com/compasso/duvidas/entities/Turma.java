@@ -28,11 +28,28 @@ public class Turma {
 	@ManyToMany
 	private List<Usuario> usuarios = new ArrayList<>();
 
-	@OneToMany
-	@JsonManagedReference
+	@ManyToMany
 	private List<Sprint> sprints = new ArrayList<>();
 
 
 
 	public void adicionarUsuario(Usuario usuario){this.getUsuarios().add(usuario);}
+
+	@Override
+	public String toString() {
+		List<Long> usuariosIds = new ArrayList<>();
+		for(Usuario usuario : this.usuarios){
+			usuariosIds.add(usuario.getId());
+		}
+		List<Long> sprintsIds = new ArrayList<>();
+		for(Sprint sprint : this.sprints){
+			sprintsIds.add(sprint.getId());
+		}
+		return "Turma{" +
+				"id=" + id +
+				", nome='" + nome + '\'' +
+				", usuarios=" + usuariosIds +
+				", sprints=" + sprintsIds +
+				'}';
+	}
 }

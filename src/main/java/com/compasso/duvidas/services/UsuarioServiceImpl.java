@@ -116,13 +116,20 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Override
     @Transactional
     public ResponseEntity<UsuarioDTO> delete(Long id) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if(usuario.isPresent()){
-            usuarioRepository.delete(usuario.get());
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if(usuarioOptional.isPresent()){
+            if(!usuarioOptional.get().getTurmas().isEmpty()){
+                for(Turma turma : usuarioOptional.get().getTurmas()){
+                    turma.getUsuarios().remove(usuarioOptional.get());
+                    turmaRepository.save(turma);
+                }
+                usuarioOptional.get().getTurmas().clear();
+            }
+            usuarioRepository.delete(usuarioOptional.get());
             return ResponseEntity.ok().build();
-        } else{
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
+
     }
 
 }

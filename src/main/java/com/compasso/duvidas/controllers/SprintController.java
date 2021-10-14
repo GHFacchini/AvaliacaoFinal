@@ -45,4 +45,9 @@ public class SprintController {
     @DeleteMapping("/{id}")
     public ResponseEntity<SprintDTO> delete(@PathVariable Long id){ return sprintService.delete(id);}
 
+    @PostMapping("/{id1}/cursos/{id2}")
+    public ResponseEntity<?> addSprint(@PathVariable Long id1, @PathVariable Long id2){
+        return sprintService.addSprint(id1, id2);
+    }
+
 }
