@@ -1,13 +1,13 @@
 package com.compasso.duvidas.dto;
 
-import com.compasso.duvidas.constants.TipoUsuario;
-import com.compasso.duvidas.entities.Turma;
-import com.compasso.duvidas.entities.Usuario;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.compasso.duvidas.entities.Turma;
+import com.compasso.duvidas.entities.Usuario;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +20,7 @@ public class UsuarioDTO {
 
     private	String email;
 
-    private TipoUsuario tipoUsuario;
+    private String perfilUsuario;
 
     public UsuarioDTO(Usuario usuario) {
         this.id = usuario.getId();
@@ -31,7 +31,7 @@ public class UsuarioDTO {
         }
         this.turmasIds = turmas;
         this.email = usuario.getEmail();
-        this.tipoUsuario = usuario.getTipoUsuario();
+        this.perfilUsuario = usuario.getPerfis().get(0).getAuthority();
     }
 
 

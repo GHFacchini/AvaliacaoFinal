@@ -15,7 +15,7 @@ public interface UsuarioService {
 
     ResponseEntity<UsuarioDTO> findById(Long id);
 
-    ResponseEntity<UsuarioDTO> update(Long id, UsuarioFormDTO form);
+    ResponseEntity<?> update(Long id, UsuarioFormDTO form);
 
     ResponseEntity<UsuarioDTO> delete(Long id);
 

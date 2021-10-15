@@ -27,7 +27,6 @@ public class SprintController {
         return sprintService.save(form);
     }
 
-
     @GetMapping
     public ResponseEntity<Page<SprintDTO>> findAll(@PageableDefault Pageable page){
         return ResponseEntity.ok(sprintService.findAll(page));

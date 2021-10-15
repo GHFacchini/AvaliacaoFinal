@@ -48,7 +48,6 @@ public class TopicoServiceImpl implements TopicoService {
         Optional<Usuario> autorOptional = usuarioRepository.findById(form.getAutorId());
         Optional<Curso> cursoOptional = cursoRepository.findById(form.getCursoId());
 
-
         if (autorOptional.isPresent() && cursoOptional.isPresent()) {
             entity.setTitulo(form.getTitulo());
             entity.setDescricao(form.getDescricao());

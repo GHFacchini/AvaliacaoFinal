@@ -44,7 +44,7 @@ public class TopicoDTO {
 
     private void autorInfo(Topico topico) {
         this.autor = "Id: " + topico.getAutor().getId() + " | Nome: " + topico.getAutor().getNome() +
-                " | " + topico.getAutor().getTipoUsuario();
+                " | " + topico.getAutor().getPerfis().get(0).getAuthority();
     }
 
     private void respostasInfo(Topico topico) {

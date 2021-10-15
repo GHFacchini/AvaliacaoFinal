@@ -32,7 +32,7 @@ public class RespostaDTO {
 
     private void autorInfo(Resposta resposta) {
         this.autor = "Id: " + resposta.getAutor().getId() + " | nome: " + resposta.getAutor().getNome() +
-                " | " + resposta.getAutor().getTipoUsuario();
+                " | " + resposta.getAutor().getPerfis().get(0).getAuthority();
     }
 
     private void topicoInfo(Resposta resposta){

@@ -1,12 +1,15 @@
 package com.compasso.duvidas.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.compasso.duvidas.constants.TipoUsuario;
 
 import lombok.Data;
-
-import java.util.List;
+import lombok.Getter;
 
 @Data
 public class UsuarioFormDTO {
@@ -18,8 +21,13 @@ public class UsuarioFormDTO {
     @NotEmpty(message = "email is required")
     private	String email;
 
-    @NotEmpty(message = "senha is required")
+	@NotEmpty(message = "senha is required")
+    @Getter 
     private String senha;
-    //se o valor não for passado deve ser cadastrado como bolsista
-    private TipoUsuario tipoUsuario;
+    
+    private Long perfilId;
+    
+    public void setSenha(String senha) {
+		this.senha = new BCryptPasswordEncoder().encode(senha);
+	}
 }

@@ -3,7 +3,6 @@ package com.compasso.duvidas.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.compasso.duvidas.constants.StatusTopico;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.compasso.duvidas.constants.StatusTopico;
 import com.compasso.duvidas.dto.RespostaDTO;
 import com.compasso.duvidas.dto.RespostaFormDTO;
 import com.compasso.duvidas.entities.Resposta;
@@ -21,7 +22,6 @@ import com.compasso.duvidas.entities.Usuario;
 import com.compasso.duvidas.repositories.RespostaRepository;
 import com.compasso.duvidas.repositories.TopicoRepository;
 import com.compasso.duvidas.repositories.UsuarioRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RespostaServiceImpl implements RespostaService {

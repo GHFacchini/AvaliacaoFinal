@@ -1,5 +1,7 @@
 package com.compasso.duvidas.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -8,13 +10,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.compasso.duvidas.dto.UsuarioDTO;
 import com.compasso.duvidas.dto.UsuarioFormDTO;
+import com.compasso.duvidas.entities.Perfil;
 import com.compasso.duvidas.entities.Turma;
 import com.compasso.duvidas.entities.Usuario;
+import com.compasso.duvidas.repositories.PerfilRepository;
 import com.compasso.duvidas.repositories.TurmaRepository;
 import com.compasso.duvidas.repositories.UsuarioRepository;
 
@@ -26,19 +31,31 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Autowired
     private TurmaRepository turmaRepository;
+    
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     @Autowired
     private ModelMapper mapper;
 
-
     @Override
     @Transactional
     public ResponseEntity<UsuarioDTO> save(UsuarioFormDTO form) {
+    	Optional<Perfil> perfilOptional;
+    	if(form.getPerfilId() != null) {
+    		perfilOptional = perfilRepository.findById(form.getPerfilId());
+    	} else {
+    		perfilOptional = perfilRepository.findByNome("ROLE_BOLSISTA");
+    	}
+    	
+    	List<Perfil> perfil = new ArrayList<>();
+    	perfil.add(perfilOptional.get());
+    	
         Usuario entity = new Usuario();
             entity.setNome(form.getNome());
             entity.setEmail(form.getEmail());
             entity.setSenha(form.getSenha());
-            entity.setTipoUsuario(form.getTipoUsuario());
+            entity.setPerfis(perfil);
             if(form.getTurmasIds() != null){
                 for(Long turmaId: form.getTurmasIds()){
                     Optional<Turma> turmasOptional = turmaRepository.findById(turmaId);
@@ -84,14 +101,21 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     @Transactional
-    public ResponseEntity<UsuarioDTO> update(Long id, UsuarioFormDTO form) {
+    public ResponseEntity<?> update(Long id, UsuarioFormDTO form) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if(usuario.isPresent()) {
             Usuario entity = usuario.get();
             if(form.getNome() != null)
                 entity.setNome(form.getNome());
-            if(form.getTurmasIds() != null){
-                for(Long turmaId: form.getTurmasIds()){
+            if(form.getPerfilId() != null) {
+            	Optional<Perfil> perfilOptional;
+            	perfilOptional = perfilRepository.findById(form.getPerfilId());
+            	
+            	if(perfilOptional.isPresent()) entity.getPerfis().add(perfilOptional.get());
+            	else return ((BodyBuilder) ResponseEntity.notFound()).body("Perfil '" + form.getPerfilId() + "' não encontrado");
+            }
+            if(form.getTurmasIds() != null) {
+                for(Long turmaId: form.getTurmasIds()) {
                     Optional<Turma> turmasOptional = turmaRepository.findById(turmaId);
                     if(turmasOptional.isPresent()) {
                         entity.getTurmas().add((turmasOptional.get()));

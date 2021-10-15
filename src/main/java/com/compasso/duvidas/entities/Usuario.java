@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,8 +14,6 @@ import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.compasso.duvidas.constants.TipoUsuario;
 
 import lombok.Data;
 
@@ -37,9 +33,6 @@ public class Usuario implements UserDetails{
 	private	String email;
 	
 	private String senha;
-	
-	@Enumerated(EnumType.STRING)
-	private TipoUsuario tipoUsuario;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Perfil> perfis = new ArrayList<>();
