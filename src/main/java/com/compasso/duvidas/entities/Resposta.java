@@ -1,6 +1,8 @@
 package com.compasso.duvidas.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,4 +36,6 @@ public class Resposta {
 	private LocalDateTime dataCriacao = LocalDateTime.now();
 	
 	private Boolean solucao = false;
+	
+	private String arquivo;
 }

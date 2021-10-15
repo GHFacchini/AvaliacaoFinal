@@ -20,6 +20,7 @@ public class RespostaDTO {
     private String mensagem;
     private LocalDateTime dataCriacao;
     private Boolean solucao;
+    private String arquivo;
 
     public RespostaDTO(Resposta resposta) {
         this.id = resposta.getId();
@@ -28,6 +29,7 @@ public class RespostaDTO {
         this.mensagem = resposta.getMensagem();
         this.dataCriacao = resposta.getDataCriacao();
         this.solucao = resposta.getSolucao();
+        this.arquivo = resposta.getArquivo();
     }
 
     private void autorInfo(Resposta resposta) {

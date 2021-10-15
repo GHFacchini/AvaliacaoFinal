@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.compasso.duvidas.dto.RespostaDTO;
 import com.compasso.duvidas.dto.RespostaFormDTO;
@@ -22,5 +23,7 @@ public interface RespostaService {
 	ResponseEntity<RespostaDTO> delete(Long id);
 
 	ResponseEntity<?> setSolucao(Long id);
+
+	boolean bindArquivoResposta(Long id, MultipartFile arquivo);
 
 }

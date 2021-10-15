@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.compasso.duvidas.constants.StatusTopico;
 import com.compasso.duvidas.dto.RespostaDTO;
@@ -181,6 +182,20 @@ public class RespostaServiceImpl implements RespostaService {
 
         return ResponseEntity.ok().build();
     }
+    
+	@Override
+	@Transactional
+	public boolean bindArquivoResposta(Long id, MultipartFile arquivo) {
+		Optional<Resposta> respostaOptional = respostaRepository.findById(id);
+		if(respostaOptional.isEmpty()) return true;
+		
+		Resposta resposta = respostaOptional.get();
+		
+		resposta.setArquivo(arquivo.getOriginalFilename());
+		respostaRepository.save(resposta);
+		
+		return false;
+	}
 
     //conta quantas solucoes existem
     private int contaSolucoes(Topico topico) {

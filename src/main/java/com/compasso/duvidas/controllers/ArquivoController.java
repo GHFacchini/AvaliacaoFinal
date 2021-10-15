@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.compasso.duvidas.components.Disco;
+import com.compasso.duvidas.services.RespostaService;
 
 @RestController
 @RequestMapping("/arquivo")
@@ -19,9 +20,9 @@ public class ArquivoController {
 	@Autowired
 	private Disco disco;
 	
-	@PostMapping
-	public ResponseEntity<?> upload(@RequestParam MultipartFile arquivo) {
-		return disco.saveFile(arquivo);
+	@PostMapping("resposta/{id}")
+	public ResponseEntity<?> upload(@PathVariable Long id, @RequestParam MultipartFile arquivo) {
+		return disco.saveFile(id, arquivo);
 	}
 	
 	@GetMapping("/{nome}")
