@@ -1,5 +1,7 @@
 package com.compasso.duvidas.services;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -75,9 +77,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 
             UsuarioDTO usuarioDTO = new UsuarioDTO(entity);
 
-
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
-
 
     }
 
@@ -155,5 +155,7 @@ public class UsuarioServiceImpl implements UsuarioService{
         return ResponseEntity.notFound().build();
 
     }
+    
+  
 
 }

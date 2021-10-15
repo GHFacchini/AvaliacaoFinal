@@ -15,11 +15,14 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "usuarios")
 @Data
+@NoArgsConstructor
 public class Usuario implements UserDetails{
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +39,13 @@ public class Usuario implements UserDetails{
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Perfil> perfis = new ArrayList<>();
+	
+	public Usuario(String nome, String email, String senha, List<Perfil> perfis) {
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+		this.perfis = perfis;
+	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -81,4 +91,5 @@ public class Usuario implements UserDetails{
 				", email='" + email + '\'' +
 				'}';
 	}
+
 }

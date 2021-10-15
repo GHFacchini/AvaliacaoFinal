@@ -1,10 +1,14 @@
 package com.compasso.duvidas.services;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.aspectj.util.GenericSignature.ArrayTypeSignature;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

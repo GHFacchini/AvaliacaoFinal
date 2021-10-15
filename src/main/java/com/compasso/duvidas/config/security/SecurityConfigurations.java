@@ -3,6 +3,7 @@ package com.compasso.duvidas.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,6 +20,7 @@ import com.compasso.duvidas.repositories.UsuarioRepository;
 
 @EnableWebSecurity
 @Configuration
+@Profile("prod")
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -53,20 +55,21 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.DELETE, "/cursos/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/respostas/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.POST, "/sprints").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.POST, "/sprints/**").hasRole("MODERADOR") //testar
+		.antMatchers(HttpMethod.POST, "/sprints/**").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.GET, "/sprints").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/sprints/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/sprints/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.POST, "/turmas").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.POST, "/turmas/**").hasRole("MODERADOR") //testar
+		.antMatchers(HttpMethod.POST, "/turmas/**").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.GET, "/turmas").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/turmas/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/turmas/*").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.POST, "/usuarios").hasRole("MODERADOR") //testar
+		.antMatchers(HttpMethod.POST, "/usuarios").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.GET, "/usuarios").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.GET, "/usuarios/").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/usuarios/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/usuarios/*").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.POST, "/perfis").hasRole("MODERADOR") //testar
+		.antMatchers(HttpMethod.POST, "/perfis").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.GET, "/perfis").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/perfis/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/perfis/*").hasRole("MODERADOR")
