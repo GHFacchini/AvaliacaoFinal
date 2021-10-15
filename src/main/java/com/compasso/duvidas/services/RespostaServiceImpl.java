@@ -187,7 +187,7 @@ public class RespostaServiceImpl implements RespostaService {
 	@Transactional
 	public boolean bindArquivoResposta(Long id, MultipartFile arquivo) {
 		Optional<Resposta> respostaOptional = respostaRepository.findById(id);
-		if(respostaOptional.isEmpty()) return true;
+		if(!respostaOptional.isPresent()) return true;
 		
 		Resposta resposta = respostaOptional.get();
 		
