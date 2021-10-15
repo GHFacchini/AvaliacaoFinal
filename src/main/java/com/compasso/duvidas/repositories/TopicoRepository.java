@@ -8,5 +8,8 @@ import com.compasso.duvidas.entities.Topico;
 
 public interface TopicoRepository extends JpaRepository<Topico, Long> {
 	Page<Topico> findByCurso(Pageable page, String curso);
+	
 	Page<Topico> findByTituloLike(Pageable page, String titulo);
+	
+	Page<Topico> findByCursoNome(Pageable page, String curso);
 }

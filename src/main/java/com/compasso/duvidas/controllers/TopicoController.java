@@ -35,13 +35,13 @@ public class TopicoController {
 	
 	@GetMapping
 	public ResponseEntity <Page<TopicoDTO>> findAll(@PageableDefault Pageable page,
-			@RequestParam(required = false)String titulo) {
-		return ResponseEntity.ok(topicoService.findAll(page, titulo));
+			@RequestParam(required = false) String titulo,
+			@RequestParam(required = false) String curso) {
+		return topicoService.findAll(page, titulo, curso);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<TopicoDTO> findById(@PathVariable Long id){ return topicoService.findById(id);}
-
+	public ResponseEntity<TopicoDTO> findById(@PathVariable Long id){ return topicoService.findById(id);}	
 
 	@PutMapping("/{id}")
 	public ResponseEntity<TopicoDTO> update(@PathVariable Long id, @RequestBody TopicoFormDTO form){

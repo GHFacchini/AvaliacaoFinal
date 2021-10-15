@@ -2,8 +2,8 @@ package com.compasso.duvidas.services;
 
 import java.util.Optional;
 
-import com.compasso.duvidas.entities.Resposta;
-import com.compasso.duvidas.repositories.RespostaRepository;
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 import com.compasso.duvidas.dto.TopicoDTO;
 import com.compasso.duvidas.dto.TopicoFormDTO;
 import com.compasso.duvidas.entities.Curso;
+import com.compasso.duvidas.entities.Resposta;
 import com.compasso.duvidas.entities.Topico;
 import com.compasso.duvidas.entities.Usuario;
 import com.compasso.duvidas.repositories.CursoRepository;
+import com.compasso.duvidas.repositories.RespostaRepository;
 import com.compasso.duvidas.repositories.TopicoRepository;
 import com.compasso.duvidas.repositories.UsuarioRepository;
-
-import javax.transaction.Transactional;
 
 @Service
 public class TopicoServiceImpl implements TopicoService {
@@ -68,17 +68,17 @@ public class TopicoServiceImpl implements TopicoService {
     }
 
     @Override
-    public Page<TopicoDTO> findAll(Pageable page, String titulo) {
+    public ResponseEntity<Page<TopicoDTO>> findAll(Pageable page, String titulo, String curso) {
         Page<Topico> topicos;
         if (titulo != null) {
             topicos = topicoRepository.findByTituloLike(page, titulo);
             System.out.println(topicos.getTotalElements());
-        } else {
-            topicos = topicoRepository.findAll(page);
-
-        }
+        } else if(curso != null){
+        	topicos = topicoRepository.findByCursoNome(page, curso);
+        } else topicos = topicoRepository.findAll(page);
+        
         Page<TopicoDTO> topicosDTOS = topicos.map(TopicoDTO::new);
-        return topicosDTOS;
+        return ResponseEntity.ok().body(topicosDTOS);
     }
 
     @Override
@@ -143,8 +143,6 @@ public class TopicoServiceImpl implements TopicoService {
         cursoRepository.save(topicoOptional.get().getCurso());
         topicoRepository.delete(topicoOptional.get());
         return ResponseEntity.ok().build();
-
-
     }
 
 }

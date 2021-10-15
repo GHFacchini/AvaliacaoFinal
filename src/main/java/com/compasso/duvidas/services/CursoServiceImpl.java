@@ -69,9 +69,6 @@ public class CursoServiceImpl implements CursoService {
 		return ResponseEntity.notFound().build();
 	}
 
-
-
-
 	@Override
 	public ResponseEntity<CursoDTO> delete(Long id) {
 		Optional<Curso> curso = cursoRepository.findById(id);
