@@ -1,9 +1,6 @@
 package com.compasso.duvidas.services;
 
-import com.compasso.duvidas.dto.SprintDTO;
-import com.compasso.duvidas.dto.TurmaAddSprintFormDTO;
-import com.compasso.duvidas.dto.TurmaDTO;
-import com.compasso.duvidas.dto.TurmaFormDTO;
+import com.compasso.duvidas.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,4 +22,7 @@ public interface TurmaService {
     ResponseEntity<List<SprintDTO>> findTurmaSprints(Long id);
 
     ResponseEntity<?> addSprints(Long id, TurmaAddSprintFormDTO form);
+
+    ResponseEntity<?> addUsuario(TurmaAddUsuarioFormDTO form);
+
 }

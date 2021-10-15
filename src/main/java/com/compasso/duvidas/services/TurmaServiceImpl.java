@@ -1,9 +1,6 @@
 package com.compasso.duvidas.services;
 
-import com.compasso.duvidas.dto.SprintDTO;
-import com.compasso.duvidas.dto.TurmaAddSprintFormDTO;
-import com.compasso.duvidas.dto.TurmaDTO;
-import com.compasso.duvidas.dto.TurmaFormDTO;
+import com.compasso.duvidas.dto.*;
 
 
 import com.compasso.duvidas.entities.Sprint;
@@ -119,8 +116,8 @@ public class TurmaServiceImpl implements TurmaService {
     public ResponseEntity<TurmaDTO> delete(Long id) {
         Optional<Turma> turmaOptional = turmaRepository.findById(id);
         if (turmaOptional.isPresent()) {
-            if(!turmaOptional.get().getUsuarios().isEmpty()){
-                for(Usuario usuario : turmaOptional.get().getUsuarios()){
+            if (!turmaOptional.get().getUsuarios().isEmpty()) {
+                for (Usuario usuario : turmaOptional.get().getUsuarios()) {
                     usuario.getTurmas().remove(turmaOptional.get());
                     usuarioRepository.save(usuario);
                 }
@@ -148,24 +145,50 @@ public class TurmaServiceImpl implements TurmaService {
     @Override
     public ResponseEntity<?> addSprints(Long id, TurmaAddSprintFormDTO form) {
         Optional<Turma> turmaOptional = turmaRepository.findById(id);
-        if (turmaOptional.isPresent()) {
-            Turma entity = turmaOptional.get();
-            if (form.getSprintsIds() != null) {
-                for (Long sprintId : form.getSprintsIds()) {
-                    Optional<Sprint> sprintOptional = sprintRepository.findById(sprintId);
-                    if (sprintOptional.isPresent()) {
-                        if((turmaOptional.get().getSprints().contains(sprintOptional.get()))){
-                            return ResponseEntity.badRequest().body("Essa turma já possui essa sprint");
-                        }
-                        entity.getSprints().add(sprintOptional.get());
+        if (!turmaOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Turma entity = turmaOptional.get();
+        if (form.getSprintsIds() != null) {
+            for (Long sprintId : form.getSprintsIds()) {
+                Optional<Sprint> sprintOptional = sprintRepository.findById(sprintId);
+                if (sprintOptional.isPresent()) {
+                    if ((turmaOptional.get().getSprints().contains(sprintOptional.get()))) {
+                        return ResponseEntity.badRequest().body("Essa turma já possui essa sprint");
                     }
+                    entity.getSprints().add(sprintOptional.get());
                 }
             }
-            turmaRepository.save(entity);
-            TurmaDTO turmaDTO = new TurmaDTO(entity);
-            return ResponseEntity.ok().body(turmaDTO);
         }
-        return ResponseEntity.notFound().build();
+        turmaRepository.save(entity);
+        TurmaDTO turmaDTO = new TurmaDTO(entity);
+        return ResponseEntity.ok().body(turmaDTO);
+
+
+    }
+
+    @Override
+    public ResponseEntity<?> addUsuario(TurmaAddUsuarioFormDTO form) {
+        Optional<Turma> turmaOptional = turmaRepository.findById(form.getTurmaId());
+        if (!turmaOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(form.getUsuarioId());
+        if(!usuarioOptional.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
+        if(turmaOptional.get().getUsuarios().contains(usuarioOptional.get())){
+            return ResponseEntity.badRequest().body("Esse usuário já está nessa turma");
+        }
+
+        turmaOptional.get().getUsuarios().add(usuarioOptional.get());
+        turmaRepository.save(turmaOptional.get());
+
+        usuarioOptional.get().getTurmas().add(turmaOptional.get());
+        usuarioRepository.save(usuarioOptional.get());
+
+        return ResponseEntity.ok().body(new TurmaDTO(turmaOptional.get()));
+
     }
 }
 

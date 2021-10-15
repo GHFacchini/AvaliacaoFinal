@@ -35,17 +35,6 @@ public class TurmaController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) { return turmaService.findById(id); }
 
-    @GetMapping("/{id}/sprints")
-    public ResponseEntity<List<SprintDTO>> findAllSprints(@PathVariable Long id){
-        return turmaService.findTurmaSprints(id);
-    }
-
-    @PostMapping("/{id}/sprints")
-    public ResponseEntity<?> addSprint(@PathVariable Long id, @RequestBody TurmaAddSprintFormDTO Form){
-        return turmaService.addSprints(id ,Form);
-    }
-
-
 
     @PutMapping("{/id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TurmaFormDTO form) {
@@ -56,4 +45,29 @@ public class TurmaController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         return turmaService.delete(id);
     }
+
+
+    //sprints
+
+    @GetMapping("/{id}/sprints")
+    public ResponseEntity<List<SprintDTO>> findAllSprints(@PathVariable Long id){
+        return turmaService.findTurmaSprints(id);
+    }
+
+    @PostMapping("/{id}/sprints")
+    public ResponseEntity<?> addSprint(@PathVariable Long id, @RequestBody TurmaAddSprintFormDTO form){
+        return turmaService.addSprints(id ,form);
+    }
+
+
+    //usuarios
+
+    @PostMapping("/usuarios")
+    public ResponseEntity<?> addUsuario(@RequestBody TurmaAddUsuarioFormDTO form){
+        return turmaService.addUsuario(form);
+    }
+
+
+
+
 }
