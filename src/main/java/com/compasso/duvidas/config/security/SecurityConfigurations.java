@@ -51,6 +51,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.POST, "/h2-console/**").permitAll()
 		.antMatchers(HttpMethod.GET, "/topicos/fechar/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/topicos/*").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.POST, "/cursos").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/cursos/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/cursos/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/respostas/*").hasRole("MODERADOR")
