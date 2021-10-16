@@ -49,7 +49,12 @@ public class CursoController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<CursoDTO> delete(@PathVariable Long id) {
-		return cursoService.delete(id);
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		try{
+			return cursoService.delete(id);
+		}
+		catch (Exception e){
+			return ResponseEntity.badRequest().body("Não é possível deletar um curso já cadastrada em uma sprint");
+		}
 	}
 }

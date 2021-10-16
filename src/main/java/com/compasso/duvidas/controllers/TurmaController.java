@@ -23,7 +23,7 @@ public class TurmaController {
     private TurmaService turmaService;
 
     @PostMapping
-    public ResponseEntity<TurmaDTO> save(@RequestBody @Valid TurmaFormDTO form){
+    public ResponseEntity<?> save(@RequestBody @Valid TurmaFormDTO form){
         return turmaService.save(form);
     }
 
@@ -37,7 +37,7 @@ public class TurmaController {
 
 
     @PutMapping("{/id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TurmaFormDTO form) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid TurmaFormDTO form) {
         return turmaService.update(id, form);
     }
 
@@ -49,22 +49,39 @@ public class TurmaController {
 
     //sprints
 
+    @PostMapping("/{id}/sprints")
+    public ResponseEntity<?> addSprint(@PathVariable Long id, @RequestBody @Valid TurmaAddSprintFormDTO form){
+        return turmaService.addSprints(id ,form);
+    }
+
     @GetMapping("/{id}/sprints")
-    public ResponseEntity<List<SprintDTO>> findAllSprints(@PathVariable Long id){
+    public ResponseEntity<?> findAllSprints(@PathVariable Long id){
         return turmaService.findTurmaSprints(id);
     }
 
-    @PostMapping("/{id}/sprints")
-    public ResponseEntity<?> addSprint(@PathVariable Long id, @RequestBody TurmaAddSprintFormDTO form){
-        return turmaService.addSprints(id ,form);
+    @DeleteMapping("/{id1}/sprints/{id2}")
+    public ResponseEntity<?> removeSprint(@PathVariable Long id1, @PathVariable Long id2){
+        return turmaService.removeSprint(id1, id2);
     }
+
+
 
 
     //usuarios
 
-    @PostMapping("/usuarios")
-    public ResponseEntity<?> addUsuario(@RequestBody TurmaAddUsuarioFormDTO form){
-        return turmaService.addUsuario(form);
+    @PostMapping("/{id1}/usuarios/{id2}")
+    public ResponseEntity<?> addUsuario(@PathVariable Long id1,@PathVariable Long id2){
+        return turmaService.addUsuario(id1, id2);
+    }
+
+    @GetMapping("/{id1}/usuarios")
+    public ResponseEntity<?> findUsuarios(@PathVariable Long id1){
+        return turmaService.findUsuarios(id1);
+    }
+
+    @DeleteMapping("/{id1}/usuarios/{id2}")
+    public ResponseEntity<?> removeUsuario(@PathVariable Long id1,@PathVariable Long id2){
+        return turmaService.removeUsuario(id1, id2);
     }
 
 

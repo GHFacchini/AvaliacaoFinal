@@ -8,15 +8,19 @@ import org.springframework.http.ResponseEntity;
 
 public interface SprintService {
 
-    ResponseEntity<SprintDTO> save(SprintFormDTO form);
+    ResponseEntity<?> save(SprintFormDTO form);
 
     Page<SprintDTO> findAll(Pageable page);
 
-    ResponseEntity<SprintDTO> findById(Long id);
+    ResponseEntity<?> findById(Long id);
 
-    ResponseEntity<SprintDTO> update(Long id, SprintFormDTO form);
+    ResponseEntity<?> update(Long id, SprintFormDTO form);
 
-    ResponseEntity<SprintDTO> delete(Long id);
+    ResponseEntity<?> delete(Long id);
 
-    ResponseEntity<?> addSprint(Long id1, Long id2);
+    ResponseEntity<?> addCurso(Long id1, Long id2);
+
+    ResponseEntity<?> findCursos(Long id);
+
+    ResponseEntity<?> removeCurso(Long id1, Long id2);
 }

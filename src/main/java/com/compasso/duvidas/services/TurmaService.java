@@ -9,20 +9,25 @@ import java.util.List;
 
 public interface TurmaService {
 
-    ResponseEntity<TurmaDTO> save(TurmaFormDTO form);
+    ResponseEntity<?> save(TurmaFormDTO form);
 
     Page<TurmaDTO> findAll(Pageable page);
 
-    ResponseEntity<TurmaDTO> findById(Long id);
+    ResponseEntity<?> findById(Long id);
 
-    ResponseEntity<TurmaDTO> update(Long id,TurmaFormDTO form);
+    ResponseEntity<?> update(Long id,TurmaFormDTO form);
 
-    ResponseEntity<TurmaDTO> delete(Long id);
+    ResponseEntity<?> delete(Long id);
 
-    ResponseEntity<List<SprintDTO>> findTurmaSprints(Long id);
+    ResponseEntity<?> findTurmaSprints(Long id);
 
     ResponseEntity<?> addSprints(Long id, TurmaAddSprintFormDTO form);
 
-    ResponseEntity<?> addUsuario(TurmaAddUsuarioFormDTO form);
+    ResponseEntity<?> addUsuario(Long turmaId, Long usuarioId);
 
+    ResponseEntity<?> removeUsuario(Long turmaId, Long usuarioId);
+
+    ResponseEntity<?> findUsuarios(Long id1);
+
+    ResponseEntity<?> removeSprint(Long turmaId, Long sprintId);
 }
