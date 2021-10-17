@@ -27,12 +27,7 @@ public class TopicoController {
 	
 	@Autowired
 	private TopicoService topicoService;
-	
-	@PostMapping
-	public ResponseEntity<TopicoDTO> save(@RequestBody @Valid TopicoFormDTO form) {
-		return topicoService.save(form);
-	}
-	
+
 	@GetMapping
 	public ResponseEntity <Page<TopicoDTO>> findAll(@PageableDefault Pageable page,
 			@RequestParam(required = false) String titulo,
@@ -40,19 +35,4 @@ public class TopicoController {
 		return topicoService.findAll(page, titulo, curso);
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<TopicoDTO> findById(@PathVariable Long id){ return topicoService.findById(id);}	
-
-	@PutMapping("/{id}")
-	public ResponseEntity<TopicoDTO> update(@PathVariable Long id, @RequestBody TopicoFormDTO form){
-		return topicoService.update(id, form);
-	}
-
-	@DeleteMapping("/{id}")
-	public ResponseEntity<TopicoDTO> delete(@PathVariable Long id){ return topicoService.delete(id);}
-
-	@GetMapping("/fechar/{id}")
-	public ResponseEntity<?> findAll(@PathVariable Long id) {
-		return topicoService.close(id);
-	}
 }

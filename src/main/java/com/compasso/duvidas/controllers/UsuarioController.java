@@ -43,11 +43,4 @@ public class UsuarioController {
         return usuarioService.delete(id);
     }
 
-    /* adicionar aluno à uma determinada turma
-    @GetMapping 
-    public ResponseEntity<UsuarioDTO> adicionarEmTurma(){
-    } */
-
-
-
 }

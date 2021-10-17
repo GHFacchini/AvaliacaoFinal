@@ -3,13 +3,14 @@ package com.compasso.duvidas.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.compasso.duvidas.entities.Curso;
+import com.compasso.duvidas.repositories.CursoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,25 +40,20 @@ public class RespostaServiceImpl implements RespostaService {
     @Autowired
     private TopicoRepository topicoRepository;
 
+    @Autowired
+    private CursoRepository cursoRepository;
+
     @Override
     @Transactional
-    public ResponseEntity<?> save(RespostaFormDTO form) {
-
-        Optional<Topico> topicoOptional = topicoRepository.findById(form.getIdTopico());
-        //se não acha o tópcio retorna not found
-        if (!topicoOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        //se o tópico está fechado retorna bad request
-        if (topicoOptional.get().getStatus() == StatusTopico.FECHADO) {
-            return ResponseEntity.badRequest().body("O tópico está fechado");
-        }
-
+    public ResponseEntity<?> save(Long cursoId, Long topicoId, RespostaFormDTO form) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
+        Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
         Optional<Usuario> autorOptional = usuarioRepository.findById(form.getIdAutor());
-        // se não achar o autor retorna not found
-        if (!autorOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
+        ResponseEntity<?> response = verificaOptionalToSave(cursoOptional, topicoOptional, autorOptional);
+        if (response != null) {
+            return response;
         }
+
         Resposta entity = new Resposta();
         entity.setAutor(autorOptional.get());
         entity.setTopico(topicoOptional.get());
@@ -89,113 +85,104 @@ public class RespostaServiceImpl implements RespostaService {
     }
 
     @Override
-    public ResponseEntity<RespostaDTO> findById(Long id) {
-        Optional<Resposta> respostaOptional = respostaRepository.findById(id);
-        if (respostaOptional.isPresent()) {
-            return ResponseEntity.ok().body(new RespostaDTO(respostaOptional.get()));
+    public ResponseEntity<?> findById(Long cursoId, Long topicoId, Long respostaId) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
+        Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
+        Optional<Resposta> respostaOptional = respostaRepository.findById(respostaId);
+        ResponseEntity<?> response = verificaOptional(cursoOptional, topicoOptional, respostaOptional);
+        if (response != null) {
+            return response;
         }
-        return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok().body(new RespostaDTO(respostaOptional.get()));
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> update(Long id, RespostaFormDTO form) {
-        Optional<Resposta> resposta = respostaRepository.findById(id);
-        if (resposta.isPresent()) {
-            Resposta entity = resposta.get();
-            if (form.getIdAutor() != null && form.getIdTopico() != null) {
-                Optional<Usuario> autor = usuarioRepository.findById(form.getIdAutor());
-                Optional<Topico> topico = topicoRepository.findById(form.getIdTopico());
-                if (autor.isPresent()) {
-                    if (topico.isPresent()) {
-                        entity.setTopico(topico.get());
-                        entity.setAutor(autor.get());
-
-                        List<Resposta> respostas = topico.get().getRespostas();
-                        respostas.add(entity);
-                        topico.get().setRespostas(respostas);
-                        topicoRepository.save(topico.get());
-                    } else return ((BodyBuilder) ResponseEntity.notFound()).body("Tópico não encontrado");
-                } else return ((BodyBuilder) ResponseEntity.notFound()).body("Usuário autor não encontrado");
-            }
-
-            if (form.getMensagem() != null)
-                entity.setMensagem(form.getMensagem());
-
-            respostaRepository.save(entity);
-            return ResponseEntity.ok().body(new RespostaDTO(entity));
+    public ResponseEntity<?> update(Long cursoId, Long topicoId, Long respostaId, RespostaFormDTO form) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
+        Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
+        Optional<Resposta> respostaOptional = respostaRepository.findById(respostaId);
+        Optional<Usuario> autorOptional = usuarioRepository.findById(form.getIdAutor());
+        ResponseEntity<?> response = verificaOptional(cursoOptional, topicoOptional, respostaOptional, autorOptional);
+        if (response != null) {
+            return response;
         }
-        return ResponseEntity.notFound().build();
+
+        Resposta entity = respostaOptional.get();
+
+        entity.setTopico(topicoOptional.get());
+        entity.setAutor(autorOptional.get());
+
+        List<Resposta> respostas = topicoOptional.get().getRespostas();
+        respostas.add(entity);
+        topicoOptional.get().setRespostas(respostas);
+        topicoRepository.save(topicoOptional.get());
+
+
+        entity.setMensagem(form.getMensagem());
+        respostaRepository.save(entity);
+        return ResponseEntity.ok().body(new RespostaDTO(entity));
+
     }
 
     @Override
     @Transactional
-    public ResponseEntity<RespostaDTO> delete(Long id) {
-        Optional<Resposta> respostaOptional = respostaRepository.findById(id);
-        if (!respostaOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> delete(Long cursoId, Long topicoId, Long respostaId) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
+        Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
+        Optional<Resposta> respostaOptional = respostaRepository.findById(respostaId);
+        ResponseEntity<?> response = verificaOptional(cursoOptional, topicoOptional, respostaOptional);
+        if (response != null) {
+            return response;
         }
-        if(contaRespostas(respostaOptional.get().getTopico()) == 1){
-            respostaOptional.get().getTopico().setStatus(StatusTopico.NAO_RESPONDIDO);
-        }else{
-            if (respostaOptional.get().getSolucao() && contaSolucoes(respostaOptional.get().getTopico()) == 1) {
-                respostaOptional.get().getTopico().setStatus(StatusTopico.NAO_SOLUCIONADO);
-            }
-        }
+
+        //atualiza o status do tópico se necessários
+        Topico topico = updateTopicoAfterDelete(respostaOptional.get());
 
         respostaRepository.delete(respostaOptional.get());
-        topicoRepository.save(respostaOptional.get().getTopico());
+        topicoRepository.save(topico);
         return ResponseEntity.ok().build();
-
-
     }
 
 
     //inverte valor de solucao (true/false)
-    //utiliza o metodo contaSolucos para que se só houver uma solucao ao trocar o valor dela o topico
-    //volte a ser não solucionado
     @Override
     @Transactional
-    public ResponseEntity<?> setSolucao(Long id) {
-        Optional<Resposta> respostaOptional = respostaRepository.findById(id);
-        if (!respostaOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> setSolucao(Long cursoId, Long topicoId, Long respostaId) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
+        Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
+        Optional<Resposta> respostaOptional = respostaRepository.findById(respostaId);
+        ResponseEntity<?> response = verificaOptional(cursoOptional, topicoOptional, respostaOptional);
+        if (response != null) {
+            return response;
         }
 
-        Resposta entity = respostaOptional.get();
-        //se essa resposta for a solucao
-        if (entity.getSolucao()) {
-            //e for a unica solucao
-            if (contaSolucoes(entity.getTopico()) == 1) {
-                //topico volta a ser não solucionado
-                entity.getTopico().setStatus(StatusTopico.NAO_SOLUCIONADO);
-            }
-        } else {   //se a resposta não era solucao agora o topico estará solucinado
-            entity.getTopico().setStatus(StatusTopico.SOLUCIONADO);
-        }
-        //inverte o valor (true/false)
-        entity.setSolucao(!entity.getSolucao());
+        Resposta resposta = updateTopicoAfterSolucao(respostaOptional.get());
 
-        respostaRepository.save(entity);
+        respostaRepository.save(resposta);
 
-        topicoRepository.save(entity.getTopico());
+        topicoRepository.save(resposta.getTopico());
 
         return ResponseEntity.ok().build();
     }
-    
-	@Override
-	@Transactional
-	public boolean bindArquivoResposta(Long id, MultipartFile arquivo) {
-		Optional<Resposta> respostaOptional = respostaRepository.findById(id);
-		if(!respostaOptional.isPresent()) return true;
-		
-		Resposta resposta = respostaOptional.get();
-		
-		resposta.setArquivo(arquivo.getOriginalFilename());
-		respostaRepository.save(resposta);
-		
-		return false;
-	}
+
+    @Override
+    @Transactional
+    public boolean bindArquivoResposta(Long id, MultipartFile arquivo) {
+        Optional<Resposta> respostaOptional = respostaRepository.findById(id);
+        if (!respostaOptional.isPresent()) return true;
+
+        Resposta resposta = respostaOptional.get();
+
+        resposta.setArquivo(arquivo.getOriginalFilename());
+        respostaRepository.save(resposta);
+
+        return false;
+    }
+
+
+
 
     //conta quantas solucoes existem
     private int contaSolucoes(Topico topico) {
@@ -208,12 +195,96 @@ public class RespostaServiceImpl implements RespostaService {
         return cont;
     }
 
+    //conta quantas resposta existem
     private int contaRespostas(Topico topico) {
         int cont = 0;
-        for (Resposta resposta : topico.getRespostas()){
+        for (Resposta resposta : topico.getRespostas()) {
             cont++;
         }
         return cont;
+    }
+
+
+
+
+    private ResponseEntity<?> verificaOptionalToSave(Optional<Curso> curso, Optional<Topico> topico, Optional<Usuario> autor) {
+
+        if (!curso.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
+        }
+        if ((!topico.isPresent() || !curso.get().getTopicos().contains(topico.get()))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Topico não encontrado");
+        }
+        if (topico.get().getStatus() == StatusTopico.FECHADO) {
+            return ResponseEntity.badRequest().body("O tópico está fechado");
+        }
+        if (!autor.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+        return null;
+    }
+
+    //verifica a presença dos optionals e se as entidades mães possum as filhas (curso>topico>resposta)
+    private ResponseEntity<?> verificaOptional(Optional<Curso> curso, Optional<Topico> topico, Optional<Resposta> resposta) {
+        if (!curso.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
+        }
+        if ((!topico.isPresent() || !curso.get().getTopicos().contains(topico.get()))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Topico não encontrado");
+        }
+        if ((!resposta.isPresent() || !topico.get().getRespostas().contains(resposta.get()))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resposta não encontrada");
+        }
+        return null;
+    }
+
+    private ResponseEntity<?> verificaOptional(Optional<Curso> curso, Optional<Topico> topico, Optional<Resposta> resposta, Optional<Usuario> autor) {
+        if (!curso.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
+        }
+        if ((!topico.isPresent() || !curso.get().getTopicos().contains(topico.get()))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Topico não encontrado");
+        }
+        if ((!resposta.isPresent() || !topico.get().getRespostas().contains(resposta.get()))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resposta não encontrada");
+        }
+        if (!autor.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+        return null;
+    }
+
+
+
+
+    //atualiza o status do tópico se necessários
+    private Topico updateTopicoAfterDelete(Resposta resposta) {
+        Topico topico = resposta.getTopico();
+        if (contaRespostas(topico) == 1) {
+            topico.setStatus(StatusTopico.NAO_RESPONDIDO);
+        } else {
+            if (resposta.getSolucao() && contaSolucoes(topico) == 1) {
+                topico.setStatus(StatusTopico.NAO_SOLUCIONADO);
+            }
+        }
+        return topico;
+    }
+
+    //atualiza o status do tópico se necessário
+    private Resposta updateTopicoAfterSolucao(Resposta resposta) {
+        //se essa resposta for a solucao
+        if (resposta.getSolucao()) {
+            //e for a unica solucao
+            if (contaSolucoes(resposta.getTopico()) == 1) {
+                //topico volta a ser não solucionado
+                resposta.getTopico().setStatus(StatusTopico.NAO_SOLUCIONADO);
+            }
+        } else {   //se a resposta não era solucao agora o topico estará solucinado
+            resposta.getTopico().setStatus(StatusTopico.SOLUCIONADO);
+        }
+        //inverte o valor (true/false)
+        resposta.setSolucao(!resposta.getSolucao());
+        return resposta;
     }
 
 }

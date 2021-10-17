@@ -10,15 +10,14 @@ import com.compasso.duvidas.dto.TopicoFormDTO;
 
 public interface TopicoService {
 
-	ResponseEntity<TopicoDTO> save(TopicoFormDTO form);
+	//no recurso /cursos
+	ResponseEntity<?> save(Long id, TopicoFormDTO form);
+	ResponseEntity<?> findAllFromCurso(Long id, Pageable page, String titulo, String Curso);
+	ResponseEntity<?> findById(Long cursoId, Long topicoId);
+	ResponseEntity<?> close(Long cursoId, Long topicoId);
+	ResponseEntity<?> delete(Long cursoId, Long topicoId);
+	ResponseEntity<?> update(Long cursoId, Long topicoId, TopicoFormDTO form);
 
+	//fora do recurso /cursos
 	ResponseEntity<Page<TopicoDTO>> findAll(Pageable page, String titulo, String Curso);
-
-	ResponseEntity<?> close(Long id);
-
-	ResponseEntity<TopicoDTO> findById(Long id);
-
-	ResponseEntity<TopicoDTO> update(Long id, TopicoFormDTO form);
-
-	ResponseEntity<TopicoDTO> delete(Long id);
 }

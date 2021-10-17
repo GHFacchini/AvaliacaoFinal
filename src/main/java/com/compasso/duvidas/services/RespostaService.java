@@ -12,18 +12,15 @@ import com.compasso.duvidas.dto.RespostaFormDTO;
 
 public interface RespostaService {
 
-	ResponseEntity<?> save(@Valid RespostaFormDTO form);
-
-	Page<RespostaDTO> findAll(Pageable page);
-
-	ResponseEntity<RespostaDTO> findById(Long id);
-
-	ResponseEntity<?> update(Long id, RespostaFormDTO form);
-
-	ResponseEntity<RespostaDTO> delete(Long id);
-
-	ResponseEntity<?> setSolucao(Long id);
-
+	// no recurso /cursos/topicos
+	ResponseEntity<?> save(Long cursoId, Long topicoId, @Valid RespostaFormDTO form);
+	ResponseEntity<?> findById(Long cursoId, Long topicoId, Long respostaId);
+	ResponseEntity<?> update(Long cursoId, Long topicoId, Long respostaId, RespostaFormDTO form);
+	ResponseEntity<?> delete(Long cursoId, Long topicoId, Long respostaId);
+	ResponseEntity<?> setSolucao(Long cursoId, Long topicoId, Long respostaId);
 	boolean bindArquivoResposta(Long id, MultipartFile arquivo);
+
+	//fora do recurso /cursos/topicos
+	Page<RespostaDTO> findAll(Pageable page);
 
 }
