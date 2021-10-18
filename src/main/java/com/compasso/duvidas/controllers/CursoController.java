@@ -64,14 +64,20 @@ public class CursoController {
     }
 
 
-    @GetMapping("/{id}/topicos")
+   /* @GetMapping("/{id}/topicos")
     public ResponseEntity<?> findAllTopicos(@PathVariable Long id,
                                             @PageableDefault Pageable page,
                                             @RequestParam(required = false) String titulo,
                                             @RequestParam(required = false) String curso) {
         return topicoService.findAllFromCurso(id, page, titulo, curso);
     }
+*/
 
+    //faz o mesmo que o de cima mas não da pra filtrar por nome
+    @GetMapping("/{id}/topicos")
+    public ResponseEntity<?> findByCursoId(@PathVariable Long id,@PageableDefault Pageable page){
+        return topicoService.findByCursoId(page, id);
+    }
 
     @GetMapping("/{id1}/topicos/{id2}")
     public ResponseEntity<?> findTopicoById(@PathVariable Long id1, @PathVariable Long id2) {
@@ -102,6 +108,8 @@ public class CursoController {
     public ResponseEntity<?> save(@PathVariable Long id1, @PathVariable Long id2, @RequestBody @Valid RespostaFormDTO form) {
         return respostaService.save(id1, id2, form);
     }
+
+
 
     @GetMapping("/{id1}/topicos/{id2}/respostas/{id3}")
     public ResponseEntity<?> findById(@PathVariable Long id1, @PathVariable Long id2, @PathVariable Long id3) {

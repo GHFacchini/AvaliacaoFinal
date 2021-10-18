@@ -20,4 +20,6 @@ public interface TopicoService {
 
 	//fora do recurso /cursos
 	ResponseEntity<Page<TopicoDTO>> findAll(Pageable page, String titulo, String Curso);
+
+	ResponseEntity<?> findByCursoId(Pageable page, Long id);
 }

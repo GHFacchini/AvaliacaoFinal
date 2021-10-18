@@ -51,7 +51,7 @@ public class TopicoServiceImpl implements TopicoService {
         Optional<Curso> cursoOptional = cursoRepository.findById(id);
         Optional<Usuario> autorOptional = usuarioRepository.findById(form.getAutorId());
         ResponseEntity<?> response = verificaOptionalComAutor(cursoOptional, autorOptional);
-        if(response != null){
+        if (response != null) {
             return response;
         }
 
@@ -92,7 +92,7 @@ public class TopicoServiceImpl implements TopicoService {
         Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
         Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
         ResponseEntity<?> response = verificaOptional(cursoOptional, topicoOptional);
-        if(response !=null ){
+        if (response != null) {
             return response;
         }
 
@@ -105,7 +105,7 @@ public class TopicoServiceImpl implements TopicoService {
         Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
         Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
         ResponseEntity<?> response = verificaOptional(cursoOptional, topicoOptional);
-        if(response !=null ){
+        if (response != null) {
             return response;
         }
 
@@ -123,7 +123,7 @@ public class TopicoServiceImpl implements TopicoService {
         Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
         Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
         ResponseEntity<?> response = verificaOptional(cursoOptional, topicoOptional);
-        if(response !=null ){
+        if (response != null) {
             return response;
         }
 
@@ -143,7 +143,6 @@ public class TopicoServiceImpl implements TopicoService {
     }
 
 
-
     //buscar todos os tópicos em todos os cursos
     @Override
     public ResponseEntity<Page<TopicoDTO>> findAll(Pageable page, String titulo, String curso) {
@@ -154,6 +153,13 @@ public class TopicoServiceImpl implements TopicoService {
             topicos = topicoRepository.findByCursoNome(page, curso);
         } else topicos = topicoRepository.findAll(page);
 
+        Page<TopicoDTO> topicosDTOS = topicos.map(TopicoDTO::new);
+        return ResponseEntity.ok().body(topicosDTOS);
+    }
+
+    @Override
+    public ResponseEntity<?> findByCursoId(Pageable page, Long id) {
+        Page<Topico> topicos = topicoRepository.findByCurso_Id(page, id);
         Page<TopicoDTO> topicosDTOS = topicos.map(TopicoDTO::new);
         return ResponseEntity.ok().body(topicosDTOS);
     }
