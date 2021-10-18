@@ -86,11 +86,13 @@ public class SprintServiceImpl implements SprintService {
         Sprint entity = sprintOptional.get();
         entity.setTitulo(form.getTitulo());
         if (form.getCursosIds() != null) {
+            entity.getCursos().clear();
             for (Long cursoId : form.getCursosIds()) {
                 Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
-                if (cursoOptional.isPresent()) {
-                    entity.getCursos().add(cursoOptional.get());
+                if (!cursoOptional.isPresent()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
                 }
+                entity.getCursos().add(cursoOptional.get());
             }
         }
         sprintRepository.save(entity);
