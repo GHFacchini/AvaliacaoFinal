@@ -1,5 +1,7 @@
 package com.compasso.duvidas.services;
 
+import com.compasso.duvidas.constants.Categoria;
+import com.compasso.duvidas.entities.Curso;
 import com.compasso.duvidas.entities.Topico;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,12 +14,14 @@ public interface CursoService {
 
 	ResponseEntity<CursoDTO> save(CursoFormDTO form);
 
-	Page<CursoDTO> findAll(Pageable page);
+	Page<CursoDTO> findAll(Pageable page, Categoria categoria);
 
-	ResponseEntity<CursoDTO> findById(Long id);
 
-	ResponseEntity<CursoDTO> update(Long id, CursoFormDTO form);
+	ResponseEntity<?> findById(Long id);
 
-	ResponseEntity<CursoDTO> delete(Long id);
+
+	ResponseEntity<?> update(Long id, CursoFormDTO form);
+
+	ResponseEntity<?> delete(Long id);
 	
 }

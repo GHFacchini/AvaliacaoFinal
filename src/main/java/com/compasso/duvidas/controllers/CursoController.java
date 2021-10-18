@@ -2,6 +2,7 @@ package com.compasso.duvidas.controllers;
 
 import javax.validation.Valid;
 
+import com.compasso.duvidas.constants.Categoria;
 import com.compasso.duvidas.dto.*;
 import com.compasso.duvidas.services.RespostaService;
 import com.compasso.duvidas.services.TopicoService;
@@ -33,17 +34,18 @@ public class CursoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CursoDTO>> findAll(@PageableDefault Pageable page) {
-        return ResponseEntity.ok(cursoService.findAll(page));
+    public ResponseEntity<Page<CursoDTO>> findAll(@PageableDefault Pageable page,
+                                                  @RequestParam(required = false) Categoria categoria) {
+        return ResponseEntity.ok(cursoService.findAll(page, categoria));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CursoDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         return cursoService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CursoDTO> update(@PathVariable Long id, @RequestBody CursoFormDTO form) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CursoFormDTO form) {
         return cursoService.update(id, form);
     }
 

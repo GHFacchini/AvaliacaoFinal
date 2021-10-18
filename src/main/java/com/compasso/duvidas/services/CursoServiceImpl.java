@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.compasso.duvidas.constants.Categoria;
 import com.compasso.duvidas.dto.TurmaDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,62 +22,71 @@ import com.compasso.duvidas.repositories.CursoRepository;
 @Service
 public class CursoServiceImpl implements CursoService {
 
-	@Autowired
-	private ModelMapper mapper;
+    @Autowired
+    private ModelMapper mapper;
 
-	@Autowired
-	private CursoRepository cursoRepository;
+    @Autowired
+    private CursoRepository cursoRepository;
 
-	@Override
-	@Transactional
-	public ResponseEntity<CursoDTO> save(CursoFormDTO form) {
-		Curso entity = cursoRepository.save(mapper.map(form, Curso.class));
-		CursoDTO cursoDTO = new CursoDTO(entity);
-		return ResponseEntity.status(HttpStatus.CREATED).body(cursoDTO);
-	}
+    @Override
+    @Transactional
+    public ResponseEntity<CursoDTO> save(CursoFormDTO form) {
+        Curso entity = cursoRepository.save(mapper.map(form, Curso.class));
+        CursoDTO cursoDTO = new CursoDTO(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cursoDTO);
+    }
 
-	@Override
-	public Page<CursoDTO> findAll(Pageable page) {
-		Page<Curso> cursos = cursoRepository.findAll(page);
-		Page<CursoDTO> cursosDTOS = cursos.map(CursoDTO::new);
-		return cursosDTOS;
-	}
+    @Override
+    public Page<CursoDTO> findAll(Pageable page, Categoria categoria) {
+        if(categoria == null){
+            Page<Curso> cursos = cursoRepository.findAll(page);
+            Page<CursoDTO> cursosDTOS = cursos.map(CursoDTO::new);
+            return cursosDTOS;
+        }else{
+            Page<Curso> cursos = cursoRepository.findByCategoria(page, categoria);
+            Page<CursoDTO> cursosDTOS = cursos.map(CursoDTO::new);
+            return cursosDTOS;
+        }
+    }
 
-	@Override
-	public ResponseEntity<CursoDTO> findById(Long id) {
-		Optional<Curso> cursoOptional = cursoRepository.findById(id);
-		if (cursoOptional.isPresent()) {
-			return ResponseEntity.ok().body(new CursoDTO(cursoOptional.get()));
-		}
-		return ResponseEntity.notFound().build();
-	}
+    @Override
+    public ResponseEntity<?> findById(Long id) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(id);
+        if (!cursoOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
+        }
+        return ResponseEntity.ok().body(new CursoDTO(cursoOptional.get()));
 
-	@Override
-	@Transactional
-	public ResponseEntity<CursoDTO> update(Long id, CursoFormDTO form) {
-		Optional<Curso> curso = cursoRepository.findById(id);
-		if (curso.isPresent()) {
-			Curso entity = curso.get();
-			if (form.getNome() != null)
-				entity.setNome(form.getNome());
-			if (form.getCategoria() != null)
-				entity.setCategoria(form.getCategoria());
+    }
 
-			cursoRepository.save(entity);
+    @Override
+    @Transactional
+    public ResponseEntity<?> update(Long id, CursoFormDTO form) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(id);
+        if (!cursoOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
+        }
+        Curso entity = cursoOptional.get();
+        if (form.getNome() != null)
+            entity.setNome(form.getNome());
+        if (form.getCategoria() != null)
+            entity.setCategoria(form.getCategoria());
 
-			return ResponseEntity.ok().body(mapper.map(entity, CursoDTO.class));
-		}
-		return ResponseEntity.notFound().build();
-	}
+        cursoRepository.save(entity);
 
-	@Override
-	public ResponseEntity<CursoDTO> delete(Long id) {
-		Optional<Curso> curso = cursoRepository.findById(id);
-		if (curso.isPresent()) {
-			cursoRepository.delete(curso.get());
-			return ResponseEntity.ok().build();
-		}
-		return ResponseEntity.notFound().build();
-	}
+        return ResponseEntity.ok().body(mapper.map(entity, CursoDTO.class));
+
+    }
+
+    @Override
+    public ResponseEntity<?> delete(Long id) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(id);
+        if (!cursoOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
+        }
+        cursoRepository.delete(cursoOptional.get());
+        return ResponseEntity.ok().build();
+
+    }
 
 }
