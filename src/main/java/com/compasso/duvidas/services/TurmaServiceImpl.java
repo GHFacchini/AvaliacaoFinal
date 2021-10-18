@@ -89,7 +89,6 @@ public class TurmaServiceImpl implements TurmaService {
 
     @Override
     @Transactional
-    //falta adicionar os moderadores
     public ResponseEntity<?> update(Long id, TurmaFormDTO form) {
         Optional<Turma> turmaOptional = turmaRepository.findById(id);
         if (!turmaOptional.isPresent()) {
@@ -98,6 +97,7 @@ public class TurmaServiceImpl implements TurmaService {
         Turma entity = turmaOptional.get();
         entity.setNome(form.getNome());
         if (form.getUsuariosIds() != null) {
+            entity.getUsuarios().clear();
             for (Long usuarioId : form.getUsuariosIds()) {
                 Optional<Usuario> usuarioOptional = usuarioRepository.findById(usuarioId);
                 if (!usuarioOptional.isPresent()) {
@@ -109,7 +109,7 @@ public class TurmaServiceImpl implements TurmaService {
             }
         }
         turmaRepository.save(entity);
-        return ResponseEntity.ok().body(mapper.map(entity, TurmaDTO.class));
+        return ResponseEntity.ok().body(new TurmaDTO((entity)));
     }
 
     @Override
@@ -181,11 +181,11 @@ public class TurmaServiceImpl implements TurmaService {
         }
 
         Optional<Sprint> sprintOptional = sprintRepository.findById(sprintId);
-        if(!sprintOptional.isPresent()) {
+        if (!sprintOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sprint não encontrada");
         }
 
-        if(!turmaOptional.get().getSprints().contains(sprintOptional.get())){
+        if (!turmaOptional.get().getSprints().contains(sprintOptional.get())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Essa turma não contém essa sprint ");
         }
 
@@ -195,7 +195,6 @@ public class TurmaServiceImpl implements TurmaService {
         return ResponseEntity.ok().body(new TurmaDTO(turmaOptional.get()));
 
     }
-
 
 
     //Usuarios
@@ -239,8 +238,6 @@ public class TurmaServiceImpl implements TurmaService {
         return ResponseEntity.ok().body(usuariosDTOs);
 
     }
-
-
 
 
     @Override
