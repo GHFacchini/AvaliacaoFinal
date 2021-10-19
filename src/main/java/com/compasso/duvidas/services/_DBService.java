@@ -35,7 +35,7 @@ public class _DBService {
 		//Instanciando um usuário moderador padrão
   		List<Perfil> perfil = new ArrayList<>();
   		perfil.add(perfilRepository.getOne((long) 2));
-  		Usuario userModerador = new Usuario("MODERADOR", "moderador@mod.com", new BCryptPasswordEncoder().encode("moderador2020"), perfil);
+  		Usuario userModerador = new Usuario("MODERADOR", "moderador@compasso.com", new BCryptPasswordEncoder().encode("compasso2021"), perfil);
   		usuarioRepository.save(userModerador);
   	}
 }
