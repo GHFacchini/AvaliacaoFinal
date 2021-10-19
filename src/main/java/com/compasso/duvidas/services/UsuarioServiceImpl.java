@@ -26,14 +26,14 @@ import com.compasso.duvidas.repositories.TurmaRepository;
 import com.compasso.duvidas.repositories.UsuarioRepository;
 
 @Service
-public class UsuarioServiceImpl implements UsuarioService{
+public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Autowired
     private TurmaRepository turmaRepository;
-    
+
     @Autowired
     private PerfilRepository perfilRepository;
 
@@ -42,49 +42,52 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Override
     @Transactional
-    public ResponseEntity<UsuarioDTO> save(UsuarioFormDTO form) {
-    	Optional<Perfil> perfilOptional;
-    	if(form.getPerfilId() != null) {
-    		perfilOptional = perfilRepository.findById(form.getPerfilId());
-    	} else {
-    		perfilOptional = perfilRepository.findByNome("ROLE_BOLSISTA");
-    	}
-    	
-    	List<Perfil> perfil = new ArrayList<>();
-    	perfil.add(perfilOptional.get());
-    	
-        Usuario entity = new Usuario();
-            entity.setNome(form.getNome());
-            entity.setEmail(form.getEmail());
-            entity.setSenha(form.getSenha());
-            entity.setPerfis(perfil);
-            if(form.getTurmasIds() != null){
-                for(Long turmaId: form.getTurmasIds()){
-                    Optional<Turma> turmasOptional = turmaRepository.findById(turmaId);
-                    if(turmasOptional.isPresent()) {
-                        entity.getTurmas().add((turmasOptional.get()));
-                }
-
-                    usuarioRepository.save(entity);
-
-                    Turma turma = turmasOptional.get();
-                    turma.adicionarUsuario(entity);
-                    turmaRepository.save(turma);
-                }
-            }else{
-                usuarioRepository.save(entity);
+    public ResponseEntity<?> save(UsuarioFormDTO form) {
+        Optional<Perfil> perfilOptional;
+        if (form.getPerfilId() != null) {
+            perfilOptional = perfilRepository.findById(form.getPerfilId());
+            if (!perfilOptional.isPresent()) {
+                return ResponseEntity.badRequest().body("Perfil inválido");
             }
+        } else {
+            perfilOptional = perfilRepository.findByNome("ROLE_BOLSISTA");
+        }
 
-            UsuarioDTO usuarioDTO = new UsuarioDTO(entity);
+        List<Perfil> perfil = new ArrayList<>();
+        perfil.add(perfilOptional.get());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
+        Usuario entity = new Usuario();
+        entity.setNome(form.getNome());
+        entity.setEmail(form.getEmail());
+        entity.setSenha(form.getSenha());
+        entity.setPerfis(perfil);
+        if (form.getTurmasIds() != null) {
+            for (Long turmaId : form.getTurmasIds()) {
+                Optional<Turma> turmasOptional = turmaRepository.findById(turmaId);
+                if (turmasOptional.isPresent()) {
+                    entity.getTurmas().add((turmasOptional.get()));
+                }
+
+                usuarioRepository.save(entity);
+
+                Turma turma = turmasOptional.get();
+                turma.adicionarUsuario(entity);
+                turmaRepository.save(turma);
+            }
+        } else {
+            usuarioRepository.save(entity);
+        }
+
+        UsuarioDTO usuarioDTO = new UsuarioDTO(entity);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
 
     }
 
     @Override
     public Page<UsuarioDTO> findAll(Pageable page, String nome) {
         Page<Usuario> usuarios;
-        if(nome != null) usuarios = usuarioRepository.findByNome(page, nome);
+        if (nome != null) usuarios = usuarioRepository.findByNome(page, nome);
         else usuarios = usuarioRepository.findAll(page);
         Page<UsuarioDTO> usuariosDTOS = usuarios.map(UsuarioDTO::new);
         return usuariosDTOS;
@@ -93,7 +96,7 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Override
     public ResponseEntity<UsuarioDTO> findById(Long id) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if(usuarioOptional.isPresent()){
+        if (usuarioOptional.isPresent()) {
             return ResponseEntity.ok().body(new UsuarioDTO(usuarioOptional.get()));
         }
         return ResponseEntity.notFound().build();
@@ -103,59 +106,61 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Transactional
     public ResponseEntity<?> update(Long id, UsuarioFormDTO form) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if(usuario.isPresent()) {
-            Usuario entity = usuario.get();
-            if(form.getNome() != null)
-                entity.setNome(form.getNome());
-            if(form.getPerfilId() != null) {
-            	Optional<Perfil> perfilOptional;
-            	perfilOptional = perfilRepository.findById(form.getPerfilId());
-            	
-            	if(perfilOptional.isPresent()) entity.getPerfis().add(perfilOptional.get());
-            	else return ((BodyBuilder) ResponseEntity.notFound()).body("Perfil '" + form.getPerfilId() + "' não encontrado");
-            }
-            if(form.getTurmasIds() != null) {
-                for(Long turmaId: form.getTurmasIds()) {
-                    Optional<Turma> turmasOptional = turmaRepository.findById(turmaId);
-                    if(turmasOptional.isPresent()) {
-                        entity.getTurmas().add((turmasOptional.get()));
-                    }
-
-                    usuarioRepository.save(entity);
-
-                    Turma turma = turmasOptional.get();
-                    turma.adicionarUsuario(entity);
-                    turmaRepository.save(turma);
-                }
-            }
-            UsuarioDTO usuarioDTO = mapper.map(entity, UsuarioDTO.class);
-
-            usuarioRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
+        if (!usuario.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }
-        return ResponseEntity.notFound().build();
+        Usuario entity = usuario.get();
+        if (form.getNome() != null)
+            entity.setNome(form.getNome());
+        if (form.getPerfilId() != null) {
+            Optional<Perfil> perfilOptional;
+            perfilOptional = perfilRepository.findById(form.getPerfilId());
+
+            if (perfilOptional.isPresent()) entity.getPerfis().add(perfilOptional.get());
+            else
+                return ((BodyBuilder) ResponseEntity.notFound()).body("Perfil '" + form.getPerfilId() + "' não encontrado");
+        }
+        if (form.getTurmasIds() != null) {
+            for (Long turmaId : form.getTurmasIds()) {
+                Optional<Turma> turmasOptional = turmaRepository.findById(turmaId);
+                if (turmasOptional.isPresent()) {
+                    entity.getTurmas().add((turmasOptional.get()));
+                }
+
+                usuarioRepository.save(entity);
+
+                Turma turma = turmasOptional.get();
+                turma.adicionarUsuario(entity);
+                turmaRepository.save(turma);
+            }
+        }
+        UsuarioDTO usuarioDTO = new UsuarioDTO(entity);
+
+        usuarioRepository.save(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
+
 
     }
 
     @Override
     @Transactional
-    public ResponseEntity<UsuarioDTO> delete(Long id) {
+    public ResponseEntity<?> delete(Long id) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if(usuarioOptional.isPresent()){
-            if(!usuarioOptional.get().getTurmas().isEmpty()){
-                for(Turma turma : usuarioOptional.get().getTurmas()){
-                    turma.getUsuarios().remove(usuarioOptional.get());
-                    turmaRepository.save(turma);
-                }
-                usuarioOptional.get().getTurmas().clear();
-            }
-            usuarioRepository.delete(usuarioOptional.get());
-            return ResponseEntity.ok().build();
+        if (!usuarioOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }
-        return ResponseEntity.notFound().build();
+        if (!usuarioOptional.get().getTurmas().isEmpty()) {
+            for (Turma turma : usuarioOptional.get().getTurmas()) {
+                turma.getUsuarios().remove(usuarioOptional.get());
+                turmaRepository.save(turma);
+            }
+            usuarioOptional.get().getTurmas().clear();
+        }
+        usuarioRepository.delete(usuarioOptional.get());
+        return ResponseEntity.ok().body("O usuário de id: " + id + " foi deletado");
+
 
     }
-    
-  
+
 
 }

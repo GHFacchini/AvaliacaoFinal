@@ -20,7 +20,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> save(@RequestBody @Valid UsuarioFormDTO form) {
+    public ResponseEntity<?> save(@RequestBody @Valid UsuarioFormDTO form) {
         return usuarioService.save(form);
     }
 
@@ -33,7 +33,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) { return usuarioService.findById(id); }
 
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UsuarioFormDTO form) {
         return usuarioService.update(id, form);
     }

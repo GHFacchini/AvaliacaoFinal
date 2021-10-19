@@ -9,14 +9,14 @@ import org.springframework.http.ResponseEntity;
 
 public interface UsuarioService {
 
-    ResponseEntity<UsuarioDTO> save(UsuarioFormDTO form);
+    ResponseEntity<?> save(UsuarioFormDTO form);
 
     Page<UsuarioDTO> findAll(Pageable page, String nome);
 
-    ResponseEntity<UsuarioDTO> findById(Long id);
+    ResponseEntity<?> findById(Long id);
 
     ResponseEntity<?> update(Long id, UsuarioFormDTO form);
 
-    ResponseEntity<UsuarioDTO> delete(Long id);
+    ResponseEntity<?> delete(Long id);
 
 }
