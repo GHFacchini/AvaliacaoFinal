@@ -932,6 +932,45 @@
       }
     },
     "/cursos/{id1}/topicos/{id2}/respostas": {
+      "get": {
+        "tags": [
+          "cursos"
+        ],
+        "summary": "Retorna todas as respostas de um topico de um determinado curso",
+        "parameters": [
+          {
+            "name": "id1",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          },
+          {
+            "name": "id2",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespostasDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Curso, topico não encontrados"
+          }
+        }
+      },
       "post": {
         "tags": [
           "cursos"

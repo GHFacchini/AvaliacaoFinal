@@ -1,131 +1,130 @@
 openapi: 3.0.1
 info:
   title: Forum do programa de bolsas.
-  description: API para postagem de dúvidas e respectivas soluções, dentro do programa de bolsas da empresa Compasso/UOL.
+  description: >-
+    API para postagem de dúvidas e respectivas soluções, dentro do programa de
+    bolsas da empresa Compasso/UOL.
   version: 1.0.0
   termsOfService: https://compassouol.com
   contact:
     name: Suporte a desenvolvedores
-    email: compasso@hotmail.com 
+    email: compasso@hotmail.com
   license:
-    name: "Licença: GPLv3"
+    name: 'Licença: GPLv3'
     url: https://www.gnu.org/licenses/gpl-3.0.html
 servers:
-- url: http://localhost:8080/
-  description: API de teste
+  - url: http://localhost:8080/
+    description: API de teste
 paths:
   /auth:
     post:
       tags:
-      - autenticacao
+        - autenticacao
       summary: Retorna o token de login para o usuario
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginDTO"
+              $ref: '#/components/schemas/LoginDTO'
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TokenDTO"
-        400:
+                $ref: '#/components/schemas/TokenDTO'
+        '400':
           description: Email ou senha incorretos
-  
   /topicos:
     get:
-      tags: 
+      tags:
         - topicos
       summary: Recupera uma lista de topicos.
       description: Pode recuperar todos os topicos cadastradas
       parameters:
-      - name: titulo
-        in: query
-        schema:
-          type: string
-        required: false
-      - name: curso
-        in: query
-        schema:
-          type: string
-        required: false
+        - name: titulo
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: curso
+          in: query
+          schema:
+            type: string
+          required: false
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TopicosDTO"
-  
+                $ref: '#/components/schemas/TopicosDTO'
   /respostas:
     get:
-      tags: 
+      tags:
         - respostas
       summary: Recupera uma lista de respostas.
       description: Pode recuperar todos os respostas cadastradas
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RespostasDTO"
-  
+                $ref: '#/components/schemas/RespostasDTO'
   /arquivo/resposta/{id}:
     post:
       tags:
         - arquivos
       summary: Realiza upload de um arquivo
-      description: Realiza o upload de um arquivo e o relaciona com uma determinada resposta
+      description: >-
+        Realiza o upload de um arquivo e o relaciona com uma determinada
+        resposta
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Arquivo salvo com sucesso!
-        400:
+        '400':
           description: Problema ao tentar salvar arquivo...
-        404:
+        '404':
           description: Resposta não encontrada
           content:
             application/json:
-              example: "Not Found"
-
+              example: Not Found
   /arquivo/{nome}:
     get:
       tags:
         - arquivos
       summary: Realiza o download de um determinado arquivo
       parameters:
-      - name: nome
-        in: path
-        schema:
-          type: string
-        required: true
+        - name: nome
+          in: path
+          schema:
+            type: string
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        400:
+        '400':
           description: Problema ao tentar fazer o download do arquivo...
-  
   /turmas:
     get:
-      tags: 
+      tags:
         - turmas
       summary: Recupera uma lista de turmas.
       description: Pode recuperar todas as turmas cadastradas
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TurmasDTO"
+                $ref: '#/components/schemas/TurmasDTO'
     post:
       tags:
         - turmas
@@ -133,226 +132,220 @@ paths:
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/TurmaFormDTO"
+            schema:
+              $ref: '#/components/schemas/TurmaFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TurmaDTO"
-
+                $ref: '#/components/schemas/TurmaDTO'
   /turmas/{id}:
     get:
       tags:
         - turmas
       summary: Recupera uma turma pelo Id
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TurmaDTO"
-        404:
+                $ref: '#/components/schemas/TurmaDTO'
+        '404':
           description: Turma não encontrada
           content:
             application/json:
-              example: "Not Found"
+              example: Not Found
     put:
       tags:
         - turmas
       summary: Atualiza a turma de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/TurmaFormDTO"
+            schema:
+              $ref: '#/components/schemas/TurmaFormDTO'
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TurmaDTO"
-        404:
+                $ref: '#/components/schemas/TurmaDTO'
+        '404':
           description: Turma não encontrada
     delete:
       tags:
         - turmas
       summary: Remove a turma de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Turma não encontrada
-
   /turmas/{id}/sprints:
     get:
       tags:
         - turmas
       summary: Recupera todas sprints de uma determinada turma
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TurmasDTO"
-        404:
+                $ref: '#/components/schemas/TurmasDTO'
+        '404':
           description: Turma não encontrada
     post:
       tags:
         - turmas
       summary: Adiciona uma sprint a uma turma
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/TurmaAddSprintFormDTO"
+            schema:
+              $ref: '#/components/schemas/TurmaAddSprintFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SprintDTO"
-        404:
+                $ref: '#/components/schemas/SprintDTO'
+        '404':
           description: Turma não encontrada
-  
   /turmas/{id1}/sprints/{id2}:
     delete:
       tags:
         - turmas
       summary: Remove uma determinada sprint de uma determinada turma
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Turma ou sprint não encontrada
-  
   /turmas/{id1}/usuarios/{id2}:
     post:
       tags:
         - turmas
       summary: Adiciona um usuario a uma determinada turma
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TurmaDTO"
-        404:
+                $ref: '#/components/schemas/TurmaDTO'
+        '404':
           description: Turma ou usuario não encontrados
     delete:
       tags:
         - turmas
       summary: Remove um determinado usuario de uma determinada turma
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Turma ou usuario não encontrada
-
   /turmas/{id}/usuarios:
     get:
       tags:
         - turmas
       summary: Recupera todos os usuarios de uma determinada turma
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UsuariosDTO"
-        404:
+                $ref: '#/components/schemas/UsuariosDTO'
+        '404':
           description: Turma não encontrada
-
   /cursos:
     get:
-      tags: 
+      tags:
         - cursos
       summary: Recupera uma lista de cursos.
       description: Pode recuperar todos os cursos cadastradas
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CursosDTO"
+                $ref: '#/components/schemas/CursosDTO'
     post:
       tags:
         - cursos
@@ -360,100 +353,98 @@ paths:
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/CursoFormDTO"
+            schema:
+              $ref: '#/components/schemas/CursoFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CursoDTO"
-  
+                $ref: '#/components/schemas/CursoDTO'
   /cursos/{id}:
     get:
       tags:
         - cursos
       summary: Recupera um curso de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CursoDTO"
-        404:
+                $ref: '#/components/schemas/CursoDTO'
+        '404':
           description: Curso não encontrado
     put:
       tags:
         - cursos
       summary: Atualiza um curso de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/CursoFormDTO"
+            schema:
+              $ref: '#/components/schemas/CursoFormDTO'
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CursoDTO"
-        404:
+                $ref: '#/components/schemas/CursoDTO'
+        '404':
           description: Curso não encontrado
     delete:
       tags:
         - cursos
       summary: Remove o curso de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Curso não encontrado
-  
   /cursos/{id}/topicos:
     post:
       tags:
         - cursos
       summary: Adiciona um topico a um determinado curso
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/TopicoFormDTO"
+            schema:
+              $ref: '#/components/schemas/TopicoFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TopicoDTO"
-        404:
+                $ref: '#/components/schemas/TopicoDTO'
+        '404':
           description: Curso ou topico não encontrados
     get:
       tags:
@@ -461,293 +452,312 @@ paths:
       summary: Recupera todos tópicos de determinado curso
       description: Pode recuperar todos os tópicos de determinado curso pelo ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: titulo
-        in: query
-        schema:
-          type: string
-        required: false
-      - name: curso
-        in: query
-        schema:
-          type: string
-        required: false
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: titulo
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: curso
+          in: query
+          schema:
+            type: string
+          required: false
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CursosDTO"
-  
+                $ref: '#/components/schemas/CursosDTO'
   /cursos/{id1}/topicos/{id2}:
     get:
       tags:
         - cursos
       summary: Retorna um topico de determinado curso
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TopicoDTO"
-        404:
+                $ref: '#/components/schemas/TopicoDTO'
+        '404':
           description: Curso ou topico não encontrados
     put:
       tags:
         - cursos
       summary: Atualiza um topico de determinado curso
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/TopicoFormDTO"
+            schema:
+              $ref: '#/components/schemas/TopicoFormDTO'
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TopicoDTO"
-        404:
+                $ref: '#/components/schemas/TopicoDTO'
+        '404':
           description: Curso ou topico não encontrados
     delete:
       tags:
         - cursos
       summary: Remove um determinado topico de um determinado curso
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Curso ou topico não encontrados
-  
   /cursos/{id1}/topicos/{id2}/fechar:
     patch:
       tags:
         - cursos
       summary: Fecha um determinado tópico de determinado curso
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TopicoDTO"
-        404:
+                $ref: '#/components/schemas/TopicoDTO'
+        '404':
           description: Curso ou topico não encontrados
-  
   /cursos/{id1}/topicos/{id2}/respostas:
+    get:
+      tags:
+        - cursos
+      summary: Retorna todas as respostas de um topico de um determinado curso
+      parameters:
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespostasDTO'
+        '404':
+          description: Curso, topico não encontrados
     post:
       tags:
         - cursos
       summary: Adiciona uma resposta a um topico de um determinado curso
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/RespostaFormDTO"
+            schema:
+              $ref: '#/components/schemas/RespostaFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RespostaDTO"
-        404:
+                $ref: '#/components/schemas/RespostaDTO'
+        '404':
           description: Curso ou topico não encontrados
-  
   /cursos/{id1}/topicos/{id2}/respostas/{id3}:
     get:
       tags:
         - cursos
       summary: Retorna uma resposta de um topico de um determinado curso
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id3
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id3
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RespostaDTO"
-        404:
+                $ref: '#/components/schemas/RespostaDTO'
+        '404':
           description: Curso, topico ou resposta não encontrados
     put:
       tags:
         - cursos
       summary: Adiciona uma resposta a um topico de um determinado curso
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id3
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id3
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/RespostaFormDTO"
+            schema:
+              $ref: '#/components/schemas/RespostaFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RespostaDTO"
-        404:
+                $ref: '#/components/schemas/RespostaDTO'
+        '404':
           description: Curso, topico ou resposta não encontrados
     patch:
       tags:
         - cursos
       summary: Torna uma resposta como solução
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id3
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id3
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RespostaDTO"
-        404:
+                $ref: '#/components/schemas/RespostaDTO'
+        '404':
           description: Curso, topico ou resposta não encontrados
     delete:
       tags:
         - cursos
       summary: Remove uma determinada resposta
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id3
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id3
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Curso, topico ou resposta não encontrados
-  
   /sprints/:
     get:
-      tags: 
+      tags:
         - sprints
       summary: Recupera uma lista de sprints.
       description: Pode recuperar todos as sprints cadastradas
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SprintsDTO"
+                $ref: '#/components/schemas/SprintsDTO'
     post:
       tags:
         - sprints
@@ -755,76 +765,74 @@ paths:
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/SprintFormDTO"
+            schema:
+              $ref: '#/components/schemas/SprintFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SprintDTO"
-  
+                $ref: '#/components/schemas/SprintDTO'
   /sprints/{id}:
     get:
       tags:
         - sprints
       summary: Recupera uma sprint de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SprintDTO"
-        404:
+                $ref: '#/components/schemas/SprintDTO'
+        '404':
           description: Sprint não encontrado
     put:
       tags:
         - sprints
       summary: Atualiza um sprint de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/SprintFormDTO"
+            schema:
+              $ref: '#/components/schemas/SprintFormDTO'
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SprintDTO"
-        404:
+                $ref: '#/components/schemas/SprintDTO'
+        '404':
           description: Sprint não encontrado
     delete:
       tags:
         - sprints
       summary: Remove o sprint de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Sprint não encontrado
-  
   /sprints/{id}/cursos:
     get:
       tags:
@@ -832,78 +840,76 @@ paths:
       summary: Recupera todos cursos de determinada sprint
       description: Pode recuperar todos os cursos de determinado sprint pelo ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CursosDTO"
-  
+                $ref: '#/components/schemas/CursosDTO'
   /sprints/{id1}/cursos/{id2}:
     post:
       tags:
         - sprints
       summary: Adiciona um curso a uma determinada sprint
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SprintDTO"
-        404:
+                $ref: '#/components/schemas/SprintDTO'
+        '404':
           description: Sprint ou curso não encontrados
     delete:
       tags:
         - sprints
       summary: Remove um determinado curso de uma determinada sprint
       parameters:
-      - name: id1
-        in: path
-        schema:
-          type: integer
-        required: true
-      - name: id2
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id1
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: id2
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Sprint ou curso não encontrados
-  
   /usuarios:
     get:
-      tags: 
+      tags:
         - usuarios
       summary: Recupera uma lista de usuarios.
       description: Pode recuperar todos os usuarios cadastradas
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UsuariosDTO"
+                $ref: '#/components/schemas/UsuariosDTO'
     post:
       tags:
         - usuarios
@@ -911,89 +917,87 @@ paths:
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/UsuarioFormDTO"
+            schema:
+              $ref: '#/components/schemas/UsuarioFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UsuarioDTO"
-
+                $ref: '#/components/schemas/UsuarioDTO'
   /usuarios/{id}:
     get:
       tags:
         - usuarios
       summary: Recupera um usuario de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UsuarioDTO"
-        404:
+                $ref: '#/components/schemas/UsuarioDTO'
+        '404':
           description: Usuario não encontrado
     put:
       tags:
         - usuarios
       summary: Atualiza um usuario de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/UsuarioFormDTO"
+            schema:
+              $ref: '#/components/schemas/UsuarioFormDTO'
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UsuarioDTO"
-        404:
+                $ref: '#/components/schemas/UsuarioDTO'
+        '404':
           description: Usuario não encontrado
     delete:
       tags:
         - usuarios
       summary: Remove o usuario de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Usuario não encontrado
-
   /perfis:
     get:
-      tags: 
+      tags:
         - perfis
       summary: Recupera uma lista de perfis
       description: Pode recuperar todos os perfis cadastradas
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PerfisDTO"
+                $ref: '#/components/schemas/PerfisDTO'
     post:
       tags:
         - perfis
@@ -1001,76 +1005,74 @@ paths:
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/PerfilFormDTO"
+            schema:
+              $ref: '#/components/schemas/PerfilFormDTO'
       responses:
-        201:
+        '201':
           description: Cadastrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PerfilDTO"
-
+                $ref: '#/components/schemas/PerfilDTO'
   /perfis/{id}:
     get:
       tags:
         - perfis
       summary: Recupera um perfil de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PerfilDTO"
-        404:
+                $ref: '#/components/schemas/PerfilDTO'
+        '404':
           description: Perfil não encontrado
     put:
       tags:
         - perfis
       summary: Atualiza um perfil de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       requestBody:
         content:
           application/json:
-              schema:
-                $ref: "#/components/schemas/PerfilFormDTO"
+            schema:
+              $ref: '#/components/schemas/PerfilFormDTO'
       responses:
-        200:
+        '200':
           description: Sucesso
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PerfilDTO"
-        404:
+                $ref: '#/components/schemas/PerfilDTO'
+        '404':
           description: Perfil não encontrado
     delete:
       tags:
         - perfis
       summary: Remove o perfil de determinado ID
       parameters:
-      - name: id
-        in: path
-        schema:
-          type: integer
-        required: true
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
       responses:
-        200:
+        '200':
           description: Sucesso
-        404:
+        '404':
           description: Perfil não encontrado
-
 tags:
   - name: autenticacao
     description: Realiza operações de autenticacao na API
@@ -1090,8 +1092,8 @@ tags:
     description: Realiza operações na entidade Usuario
   - name: perfis
     description: Realiza operações na entidade Perfil
-security: 
-- auth: []
+security:
+  - auth: []
 components:
   securitySchemes:
     auth:
@@ -1124,7 +1126,7 @@ components:
           type: integer
           example: 1
         nome:
-          type: string 
+          type: string
           example: Spring Boot
         usuariosIds:
           type: array
@@ -1135,11 +1137,11 @@ components:
           type: array
           items:
             type: string
-            example: "Id: 3 Título: Primeira Sprint" 
+            example: 'Id: 3 Título: Primeira Sprint'
     TurmasDTO:
       type: array
       items:
-        $ref: "#/components/schemas/TurmaDTO"
+        $ref: '#/components/schemas/TurmaDTO'
     CursoDTO:
       type: object
       properties:
@@ -1148,7 +1150,7 @@ components:
           example: 2
         nome:
           type: string
-          example : Spring Boot
+          example: Spring Boot
         categoria:
           type: string
           example: React
@@ -1156,11 +1158,11 @@ components:
           type: array
           items:
             type: string
-            example: "Id: 3 Título: Primeira Sprint Status: FECHADO" 
+            example: 'Id: 3 Título: Primeira Sprint Status: FECHADO'
     CursosDTO:
       type: array
       items:
-        $ref: "#/components/schemas/CursoDTO"
+        $ref: '#/components/schemas/CursoDTO'
     CursoFormDTO:
       type: object
       properties:
@@ -1188,7 +1190,7 @@ components:
         dataCriação:
           type: string
           format: date=time
-          example: 2021-12-02 
+          example: '2021-12-02T00:00:00.000Z'
         solucao:
           type: boolean
           example: true
@@ -1198,7 +1200,7 @@ components:
     RespostasDTO:
       type: array
       items:
-        $ref: "#/components/schemas/RespostaDTO"
+        $ref: '#/components/schemas/RespostaDTO'
     RespostaFormDTO:
       type: object
       properties:
@@ -1214,7 +1216,7 @@ components:
     SprintDTO:
       type: object
       properties:
-        id: 
+        id:
           type: integer
           example: 3
         titulo:
@@ -1223,7 +1225,7 @@ components:
     SprintsDTO:
       type: array
       items:
-        $ref: "#/components/schemas/SprintDTO"
+        $ref: '#/components/schemas/SprintDTO'
     SprintFormDTO:
       type: object
       properties:
@@ -1233,7 +1235,7 @@ components:
     TopicoDTO:
       type: object
       properties:
-        id: 
+        id:
           type: integer
           example: 5
         titulo:
@@ -1245,7 +1247,7 @@ components:
         dataCriacao:
           type: string
           format: date-time
-          example: 2021-10-16 
+          example: '2021-10-16T00:00:00.000Z'
         autor:
           type: string
           example: Joao da Silva
@@ -1258,7 +1260,7 @@ components:
     TopicosDTO:
       type: array
       items:
-        $ref: "#/components/schemas/TopicoDTO"
+        $ref: '#/components/schemas/TopicoDTO'
     TopicoFormDTO:
       type: object
       properties:
@@ -1315,7 +1317,7 @@ components:
     UsuariosDTO:
       type: array
       items:
-        $ref: "#/components/schemas/UsuarioDTO"
+        $ref: '#/components/schemas/UsuarioDTO'
     UsuarioFormDTO:
       type: object
       properties:
@@ -1343,7 +1345,7 @@ components:
     PerfisDTO:
       type: array
       items:
-        $ref: "#/components/schemas/PerfilDTO"
+        $ref: '#/components/schemas/PerfilDTO'
     PerfilFormDTO:
       type: object
       properties:
