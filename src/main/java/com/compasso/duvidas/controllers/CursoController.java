@@ -94,7 +94,7 @@ public class CursoController {
 
     @PatchMapping("{id1}/topicos/{id2}/fechar")
     public ResponseEntity<?> closeTopico(@PathVariable Long id1, @PathVariable Long id2) {
-        return topicoService.close(id1, id1);
+        return topicoService.close(id1, id2);
     }
 
 
@@ -111,8 +111,6 @@ public class CursoController {
         return respostaService.save(id1, id2, form);
     }
 
-
-
     @GetMapping("/{id1}/topicos/{id2}/respostas/{id3}")
     public ResponseEntity<?> findById(@PathVariable Long id1, @PathVariable Long id2, @PathVariable Long id3) {
         return respostaService.findById(id1, id2, id3);
@@ -122,7 +120,6 @@ public class CursoController {
     public ResponseEntity<?> update(@PathVariable Long id1,@PathVariable Long id2, @PathVariable Long id3, @RequestBody RespostaFormDTO form) {
         return respostaService.update(id1, id2, id3, form);
     }
-
 
     @PatchMapping("/{id1}/topicos/{id2}/respostas/{id3}")
     public ResponseEntity<?> setSolucao(@PathVariable Long id1,@PathVariable Long id2, @PathVariable Long id3){

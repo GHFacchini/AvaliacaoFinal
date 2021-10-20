@@ -47,31 +47,44 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.POST, "/auth").permitAll()
+		
 		.antMatchers(HttpMethod.GET, "/h2-console/**").permitAll() //UTILIZADO PARA DAR ACESSO AO CONSOLE DO H2
 		.antMatchers(HttpMethod.POST, "/h2-console/**").permitAll()
-		.antMatchers(HttpMethod.GET, "/topicos/fechar/*").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.DELETE, "/topicos/*").hasRole("MODERADOR")
+		
 		.antMatchers(HttpMethod.POST, "/cursos").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/cursos/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/cursos/*").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.DELETE, "/respostas/*").hasRole("MODERADOR")
+		
+		.antMatchers(HttpMethod.PATCH, "/cursos/*/topicos/**").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.DELETE, "/cursos/*/topicos/**").hasRole("MODERADOR")
+		
+		.antMatchers(HttpMethod.PATCH, "/cursos/*/topicos/*/cursos/respostas/**").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.DELETE, "/cursos/*/topicos/*/respostas/**").hasRole("MODERADOR")
+		
 		.antMatchers(HttpMethod.POST, "/sprints").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.POST, "/sprints/**").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.GET, "/sprints").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.PUT, "/sprints/*").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.DELETE, "/sprints/*").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.PUT, "/sprints/**").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.DELETE, "/sprints/**").hasRole("MODERADOR")
+		
 		.antMatchers(HttpMethod.POST, "/turmas").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.POST, "/turmas/**").hasRole("MODERADOR")
-		.antMatchers(HttpMethod.GET, "/turmas").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/turmas/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/turmas/*").hasRole("MODERADOR")
+		
+		.antMatchers(HttpMethod.POST, "/turmas/*/sprints").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.DELETE, "/turmas/*/sprints/*").hasRole("MODERADOR")
+		
+		.antMatchers(HttpMethod.POST, "/turmas/*/usuarios/*").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.DELETE, "/turmas/*/usuarios/*").hasRole("MODERADOR")
+		
 		.antMatchers(HttpMethod.POST, "/usuarios").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.GET, "/usuarios").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.GET, "/usuarios/").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/usuarios/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/usuarios/*").hasRole("MODERADOR")
+		
 		.antMatchers(HttpMethod.POST, "/perfis").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.GET, "/perfis").hasRole("MODERADOR")
+		.antMatchers(HttpMethod.GET, "/perfis/").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.PUT, "/perfis/*").hasRole("MODERADOR")
 		.antMatchers(HttpMethod.DELETE, "/perfis/*").hasRole("MODERADOR")
 		.anyRequest().authenticated()
