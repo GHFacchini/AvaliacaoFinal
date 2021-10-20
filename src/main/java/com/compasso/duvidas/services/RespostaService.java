@@ -18,6 +18,7 @@ public interface RespostaService {
 	ResponseEntity<?> update(Long cursoId, Long topicoId, Long respostaId, RespostaFormDTO form);
 	ResponseEntity<?> delete(Long cursoId, Long topicoId, Long respostaId);
 	ResponseEntity<?> setSolucao(Long cursoId, Long topicoId, Long respostaId);
+	ResponseEntity<?> findByTopicoId(Pageable page, Long cursoId, Long topicoId);
 	boolean bindArquivoResposta(Long id, MultipartFile arquivo);
 
 	//fora do recurso /cursos/topicos

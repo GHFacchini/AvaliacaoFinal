@@ -70,23 +70,6 @@ public class TopicoServiceImpl implements TopicoService {
         return ResponseEntity.status(HttpStatus.CREATED).body(new TopicoDTO(entity));
     }
 
-    //deve buscar todos os tópicos daquele curso com paginação e filtros
-    //não sei como buscar dentro do tópico com os filtros provavelmente tem que montar a Query manualmente
-    @Override
-    public ResponseEntity<?> findAllFromCurso(Long id, Pageable page, String titulo, String Curso) {
-        Optional<Curso> cursoOptional = cursoRepository.findById(id);
-        /*if (!cursoOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
-        }
-        List<TopicoDTO> topicosDTOs = new ArrayList<>();
-        for(Topico topico : cursoOptional.get().getTopicos()){
-            topicosDTOs.add(new TopicoDTO(topico));
-        }
-        return ResponseEntity.ok().body(topicosDTOs);*/
-        return null;
-    }
-
-    //busca por um ID especifico em um curso
     @Override
     public ResponseEntity<?> findById(Long cursoId, Long topicoId) {
         Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);

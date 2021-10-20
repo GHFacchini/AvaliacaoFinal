@@ -33,6 +33,7 @@ public class CursoController {
         return cursoService.save(form);
     }
 
+
     @GetMapping
     public ResponseEntity<Page<CursoDTO>> findAll(@PageableDefault Pageable page,
                                                   @RequestParam(required = false) Categoria categoria) {
@@ -101,6 +102,10 @@ public class CursoController {
         return respostaService.save(id1, id2, form);
     }
 
+    @GetMapping("/{id1}/topicos/{id2}/respostas")
+    public ResponseEntity<?> findAll(@PathVariable Long id1, @PathVariable Long id2, @PageableDefault Pageable page){
+        return respostaService.findByTopicoId(page, id1, id2);
+    }
 
 
     @GetMapping("/{id1}/topicos/{id2}/respostas/{id3}")

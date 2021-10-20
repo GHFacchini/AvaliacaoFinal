@@ -84,6 +84,22 @@ public class RespostaServiceImpl implements RespostaService {
         return respostasDTOS;
     }
 
+
+    @Override
+    public ResponseEntity<?> findByTopicoId(Pageable page, Long cursoId, Long topicoId) {
+        Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
+        Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
+        if (!cursoOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
+        }
+        if ((!topicoOptional.isPresent() || !cursoOptional.get().getTopicos().contains(topicoOptional.get()))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Topico não encontrado");
+        }
+        Page<Resposta> respostas = respostaRepository.findByTopico_Id(page, topicoId);
+        Page<RespostaDTO> respostasDTOS = respostas.map(RespostaDTO::new);
+        return ResponseEntity.ok().body(respostasDTOS);
+    }
+
     @Override
     public ResponseEntity<?> findById(Long cursoId, Long topicoId, Long respostaId) {
         Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
