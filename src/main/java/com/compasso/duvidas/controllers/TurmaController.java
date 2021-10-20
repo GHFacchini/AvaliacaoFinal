@@ -46,7 +46,6 @@ public class TurmaController {
         return turmaService.delete(id);
     }
 
-
     //sprints
 
     @PostMapping("/{id}/sprints")
@@ -63,9 +62,6 @@ public class TurmaController {
     public ResponseEntity<?> removeSprint(@PathVariable Long id1, @PathVariable Long id2){
         return turmaService.removeSprint(id1, id2);
     }
-
-
-
 
     //usuarios
 

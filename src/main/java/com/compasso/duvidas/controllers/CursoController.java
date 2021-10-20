@@ -107,7 +107,6 @@ public class CursoController {
         return respostaService.findByTopicoId(page, id1, id2);
     }
 
-
     @GetMapping("/{id1}/topicos/{id2}/respostas/{id3}")
     public ResponseEntity<?> findById(@PathVariable Long id1, @PathVariable Long id2, @PathVariable Long id3) {
         return respostaService.findById(id1, id2, id3);
@@ -117,7 +116,6 @@ public class CursoController {
     public ResponseEntity<?> update(@PathVariable Long id1,@PathVariable Long id2, @PathVariable Long id3, @RequestBody RespostaFormDTO form) {
         return respostaService.update(id1, id2, id3, form);
     }
-
 
     @PatchMapping("/{id1}/topicos/{id2}/respostas/{id3}")
     public ResponseEntity<?> setSolucao(@PathVariable Long id1,@PathVariable Long id2, @PathVariable Long id3){
