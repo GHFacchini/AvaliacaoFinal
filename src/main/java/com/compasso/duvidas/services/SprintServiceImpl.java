@@ -84,7 +84,9 @@ public class SprintServiceImpl implements SprintService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sprint não encontrada");
         }
         Sprint entity = sprintOptional.get();
-        entity.setTitulo(form.getTitulo());
+        if(form.getTitulo() != null){
+            entity.setTitulo(form.getTitulo());
+        }
         if (form.getCursosIds() != null) {
             entity.getCursos().clear();
             for (Long cursoId : form.getCursosIds()) {
@@ -108,7 +110,7 @@ public class SprintServiceImpl implements SprintService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sprint não encontrada");
         }
         sprintRepository.delete(sprintOptional.get());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("A sprint de id: " + id + " foi deletada");
 
     }
 

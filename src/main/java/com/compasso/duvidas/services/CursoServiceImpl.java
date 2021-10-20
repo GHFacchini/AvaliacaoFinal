@@ -85,7 +85,7 @@ public class CursoServiceImpl implements CursoService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Curso não encontrado");
         }
         cursoRepository.delete(cursoOptional.get());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("O curso de id: " + id + " foi deletado");
 
     }
 

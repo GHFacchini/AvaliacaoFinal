@@ -127,7 +127,7 @@ public class TurmaServiceImpl implements TurmaService {
             turmaOptional.get().getUsuarios().clear();
         }
         turmaRepository.delete(turmaOptional.get());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("A turma de id: " + id + " foi deletada");
 
 
     }

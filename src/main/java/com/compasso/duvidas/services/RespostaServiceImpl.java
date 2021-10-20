@@ -110,17 +110,10 @@ public class RespostaServiceImpl implements RespostaService {
         }
 
         Resposta entity = respostaOptional.get();
+        if(form.getMensagem() != null){
+            entity.setMensagem(form.getMensagem());
+        }
 
-        entity.setTopico(topicoOptional.get());
-        entity.setAutor(autorOptional.get());
-
-        List<Resposta> respostas = topicoOptional.get().getRespostas();
-        respostas.add(entity);
-        topicoOptional.get().setRespostas(respostas);
-        topicoRepository.save(topicoOptional.get());
-
-
-        entity.setMensagem(form.getMensagem());
         respostaRepository.save(entity);
         return ResponseEntity.ok().body(new RespostaDTO(entity));
 
@@ -142,7 +135,7 @@ public class RespostaServiceImpl implements RespostaService {
 
         respostaRepository.delete(respostaOptional.get());
         topicoRepository.save(topico);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("A resposta de id: " + respostaId + " foi deletada");
     }
 
 
@@ -164,7 +157,7 @@ public class RespostaServiceImpl implements RespostaService {
 
         topicoRepository.save(resposta.getTopico());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new RespostaDTO(resposta));
     }
 
     @Override

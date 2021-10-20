@@ -134,12 +134,26 @@ public class TopicoServiceImpl implements TopicoService {
         topicoOptional.get().getCurso().getTopicos().remove(topicoOptional.get());
         cursoRepository.save(topicoOptional.get().getCurso());
         topicoRepository.delete(topicoOptional.get());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("O tópico de id: " + topicoId + " foi deletado");
     }
 
     @Override
     public ResponseEntity<?> update(Long cursoId, Long topicoId, TopicoFormDTO form) {
-        return null;
+        Optional<Curso> cursoOptional = cursoRepository.findById(cursoId);
+        Optional<Topico> topicoOptional = topicoRepository.findById(topicoId);
+        ResponseEntity<?> response = verificaOptional(cursoOptional, topicoOptional);
+        if (response != null) {
+            return response;
+        }
+        if(form.getTitulo() != null){
+            topicoOptional.get().setTitulo(form.getTitulo());
+        }
+        if(form.getDescricao() != null){
+            topicoOptional.get().setTitulo(form.getDescricao());
+        }
+        topicoRepository.save(topicoOptional.get());
+        return ResponseEntity.ok().body(new TopicoDTO(topicoOptional.get()));
+
     }
 
 
